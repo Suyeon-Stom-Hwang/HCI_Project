@@ -1,0 +1,22 @@
+.settingSidebar {
+  width: 400px;
+  height: 900px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.settingView {
+  width: 670px;
+  position: absolute;
+  top: 0px;
+  left: 400px;
+  margin: 23px;
+}
+
+.settingSideView {
+  width: 370px;
+  position: absolute;
+  top: 0px;
+  left: 1070px;
+}

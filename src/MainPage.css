@@ -1,0 +1,93 @@
+.mainSidebar {
+  width: 400px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.mainView {
+  width: 784px;
+  height: 900px;
+  position: absolute;
+  top: 0px;
+  left: 400px;
+}
+
+.mainTopView {
+  width: 784px;
+  position: absolute;
+  top: 0px;
+  left: 400px;
+}
+
+.mainBottomView {
+  width: 784px;
+  height: 120px;
+  position: absolute;
+  top: 120px;
+  left: 400px;
+}
+
+.mainSideView {
+  width: 256px;
+  height: 900px;
+  position: absolute;
+  top: 0px;
+  left: 1184px;
+}
+
+.paragraphBox {
+  max-width: 750px;
+  margin: 17px;
+  padding: 16px;
+  border-radius: 16px 16px 4px 16px;
+  background-color: #f2f9eb;
+}
+
+.currentSettingBlock {
+  width: 784px;
+  height: 120px;
+  display: grid;
+}
+
+.currentSettingIcon {
+  width: 70px;
+  height: 70px;
+  margin: 25px 16px 25px 25px;
+  grid-column: 1;
+  vertical-align: middle;
+  background-color: aquamarine;
+}
+
+.currentSettingSubTitle {
+  width: 90px;
+  height: 100px;
+  margin: 10px 25px 10px 0px;
+  line-height: 50px;
+  grid-column: 2;
+  background-color: aquamarine;
+}
+
+.currentSettingTagBlock {
+  width: 400px;
+  height: 120px;
+  grid-column: 3;
+  background-color: aquamarine;
+}
+
+.currentSettingEditButton {
+  margin: 40px 20px 40px 0px;
+  height: 40px;
+  grid-column: 4;
+}
+
+.keywordBlock {
+  padding: 4px 4px 4px 8px;
+  height: 34px;
+  display: inline-block;
+  background-color: #72806a;
+  border-radius: 16px 16px 4px 16px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+}

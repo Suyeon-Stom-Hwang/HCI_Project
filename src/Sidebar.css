@@ -1,0 +1,38 @@
+.sideBarTitle {
+  padding-top: 24px;
+  padding-left: 24px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.settingBlock:hover {
+  background-color: #E0E0E0;
+}
+
+.settingBlockSelected {
+  background-color: #F2F9E8;
+}
+
+.settingBlock {
+  width: 400px;
+  height: 88px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  display: grid;
+}
+
+.settingBlockIcon {
+  width: 64px;
+  height: 64px;
+  background-color: bisque;
+  grid-column: 1;
+}
+
+.settingBlockText {
+  width: 288px;
+  height: 64px;
+  line-height: 64px;
+  grid-column: 2;
+}

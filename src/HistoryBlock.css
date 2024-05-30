@@ -1,0 +1,9 @@
+.historyBlock {
+  width: 352px;
+  height: 40px;
+  line-height: 40px;
+  text-indent: 10px;
+  margin-bottom: 12px;
+  border-radius: 16px 16px 4px 16px;
+  background-color: blue;
+}
