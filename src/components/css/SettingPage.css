@@ -1,24 +1,17 @@
-.settingSidebar {
-  width: 400px;
-  height: 900px;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-}
-
 .settingView {
   width: 670px;
   height: 900px;
   position: absolute;
   top: 0px;
-  left: 400px;
+  left: 0px;
   padding: 23px;
 }
 
 .settingSideView {
   width: 370px;
+  height: 900px;
   position: absolute;
   top: 0px;
-  left: 1070px;
-  margin-top: 470px;
+  left: 670px;
+  padding-top: 470px;
 }

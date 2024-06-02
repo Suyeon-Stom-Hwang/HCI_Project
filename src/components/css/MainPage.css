@@ -1,24 +1,16 @@
-.mainSidebar {
-  width: 400px;
+.mainView {
+  width: 784px;
   height: 900px;
   position: absolute;
   top: 0px;
   left: 0px;
 }
 
-.mainView {
-  width: 784px;
-  height: 900px;
-  position: absolute;
-  top: 0px;
-  left: 400px;
-}
-
 .mainTopView {
   width: 784px;
   position: absolute;
   top: 0px;
-  left: 400px;
+  left: 0px;
 }
 
 .mainBottomView {
@@ -26,7 +18,7 @@
   height: 120px;
   position: absolute;
   top: 120px;
-  left: 400px;
+  left: 0px;
 }
 
 .mainSideView {
@@ -34,7 +26,7 @@
   height: 900px;
   position: absolute;
   top: 0px;
-  left: 1184px;
+  left: 784px;
 
   display: flex;
   flex-direction: column;

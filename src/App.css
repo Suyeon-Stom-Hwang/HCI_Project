@@ -2,3 +2,19 @@
   max-width: 1440px;
   margin: 0 auto;
 }
+
+#sideBar {
+  width: 400px;
+  height: 900px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+#mainView {
+  width: 1040px;
+  height: 900px;
+  position: absolute;
+  top: 0px;
+  left: 400px;
+}

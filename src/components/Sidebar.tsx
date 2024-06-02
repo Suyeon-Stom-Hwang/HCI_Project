@@ -6,10 +6,12 @@ import newSetting from "../assets/newSetting.svg"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useContexts } from "@/Contexts";
 import { Link, useNavigate } from "react-router-dom";
+import { ReactNode } from 'react';
 
 interface SettingBlockProps {
   image: string;
-  name: string;
+  isSelected: boolean
+  children: ReactNode;
 }
 
 interface SidebarProps {
@@ -37,11 +39,16 @@ function HistoryBlock({index, text, isPositive=true}: HistoryBlockProps) {
   )
 }
 
-function SettingBlock({image, name}: SettingBlockProps) {
+function SettingBlock({image, isSelected, children}: SettingBlockProps) {
+  let className = 'settingBlock ';
+  if (isSelected) {
+    className += 'settingBlockSelected';
+  }
+
   return (
-    <div className='settingBlock'>
+    <div className={className}>
       <div className='settingBlockIcon'><img src={image}/></div>
-      <div className='settingBlockText textTitle'>{name}</div>
+      <div className='settingBlockText textTitle'>{children}</div>
     </div>
   )
 }
@@ -85,12 +92,12 @@ const Sidebar = ({isSettings}: SidebarProps) => {
           {
             settings.map((setting) => (
               <div onClick={handleSettingClick(setting.id)} key={"clickdiv-"+setting.name}>
-                <SettingBlock name={setting.name} image=""/>
+                <SettingBlock isSelected={false} image="">{setting.name}</SettingBlock>
               </div>
             ))
           }
           <Link to={"/settings/0"}>
-            <SettingBlock name={"Add new setting"} image={newSetting}/>
+            <SettingBlock isSelected={false} image={newSetting}>Add new setting</SettingBlock>
           </Link>
         </ScrollArea>
       </div>
