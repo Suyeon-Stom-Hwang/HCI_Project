@@ -25,6 +25,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from '@radix-ui/react-label'
 import { useContexts } from "@/Contexts"
 import { useNavigate } from "react-router-dom"
+import './css/SettingForm.css'
 
 const formSchema = z.object({
   settingName: z.string().min(2).max(50),
@@ -64,7 +65,7 @@ export function SettingForm(props: {id: number}) {
   }
 
   return (
-    <>
+    <div>
       <span className='textViewTitle'>
         설정 편집
       </span>
@@ -146,11 +147,11 @@ export function SettingForm(props: {id: number}) {
             <Textarea></Textarea>
           </div>
           <div className='formButtonContainer'>
-            <Button type="submit">저장</Button>
-            <Button variant="secondary" onClick={() => navigate("/")}>취소</Button>
+            <Button className="formButton" type="submit">저장</Button>
+            <Button className="formButton" variant="secondary" onClick={() => navigate("/")}>취소</Button>
           </div>
         </form>
       </Form>
-    </>
+    </div>
   )
 }

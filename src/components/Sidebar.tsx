@@ -1,7 +1,9 @@
-import { ScrollArea } from "@/components/ui/scroll-area"
-
 import './css/Sidebar.css'
 import './css/HistoryBlock.css'
+
+import newSetting from "../assets/newSetting.svg"
+
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { useContexts } from "@/Contexts";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -17,11 +19,19 @@ interface SidebarProps {
 interface HistoryBlockProps {
   index: number;
   text: string;
+  isPositive: boolean;
 }
 
-function HistoryBlock({index, text}: HistoryBlockProps) {
+function HistoryBlock({index, text, isPositive=true}: HistoryBlockProps) {
+  let className = 'historyBlock';
+  if (isPositive) {
+    className += ' historyBlockPositive'; 
+  } else {
+    className += ' historyBlockNegative'; 
+  }
+
   return (
-    <div className='historyBlock' id={index.toString()}>
+    <div className={className} id={index.toString()}>
       {text}
     </div>
   )
@@ -51,13 +61,13 @@ const Sidebar = ({isSettings}: SidebarProps) => {
 
   if (isSettings == false) {
     historyBlock = (
-      <div className='sectionBorder'>
-        <div className='sideBarTitle'>History</div>
-        <ScrollArea className="h-[320px] w-[400px] p-4">
+      <div>
+        <div className='sideBarTitle textViewTitle'>History</div>
+        <ScrollArea className="h-[320px] w-[400px] p-[20px]">
           <div>
             {
               histories.map((history) => (
-                <HistoryBlock text={history.summary} index={history.id} key={history.id}/>
+                <HistoryBlock text={history.summary} index={history.id} isPositive={true} key={history.id}/>
               ))
             }
           </div>
@@ -69,8 +79,8 @@ const Sidebar = ({isSettings}: SidebarProps) => {
 
   return (
     <>
-      <div>
-        <div className='sideBarTitle'>Setting</div>
+      <div className='sectionBorderOnlyBottom'>
+        <div className='sideBarTitle textViewTitle'>Setting</div>
         <ScrollArea className={"h-[" + blockHeight + "] w-[400px]"}>
           {
             settings.map((setting) => (
@@ -80,7 +90,7 @@ const Sidebar = ({isSettings}: SidebarProps) => {
             ))
           }
           <Link to={"/settings/0"}>
-            <SettingBlock name={"Add new setting"} image=""/>
+            <SettingBlock name={"Add new setting"} image={newSetting}/>
           </Link>
         </ScrollArea>
       </div>
