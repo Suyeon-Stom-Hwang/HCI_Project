@@ -1,5 +1,5 @@
 // import { InfoPopup } from './InfoPopup'
-import { Sidebar } from './Sidebar'
+import Sidebar from './Sidebar'
 import { Button } from "@/components/ui/button"
 
 import './css/shadcn.css'

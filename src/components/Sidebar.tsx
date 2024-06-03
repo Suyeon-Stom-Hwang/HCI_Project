@@ -3,7 +3,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import './css/Sidebar.css'
 import './css/HistoryBlock.css'
 import { useContexts } from "@/Contexts";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface SettingBlockProps {
   image: string;
@@ -36,47 +36,57 @@ function SettingBlock({image, name}: SettingBlockProps) {
   )
 }
 
-export function Sidebar({isSettings}: SidebarProps) {
-    let historyBlock = (<div></div>)
-    let blockHeight = '800px'
-    const { settings, histories } = useContexts();
+const Sidebar = ({isSettings}: SidebarProps) => {
+  const { setSetting } = useContexts();
+  const navigate = useNavigate();
 
-    if (isSettings == false) {
-      historyBlock = (
-        <div className='sectionBorder'>
-          <div className='sideBarTitle'>History</div>
-          <ScrollArea className="h-[320px] w-[400px] p-4">
-            <div>
-              {
-                histories.map((history) => (
-                  <HistoryBlock text={history.summary} index={history.id} key={history.id}/>
-                ))
-              }
-            </div>
-          </ScrollArea>
-        </div>
-      )
-      blockHeight = '400px'
-    }
+  const handleSettingClick = (id: number) => () => {
+    setSetting(id);
+    navigate("/");
+  }
   
-    return (
-      <>
-        <div>
-          <div className='sideBarTitle'>Setting</div>
-          <ScrollArea className={"h-[" + blockHeight + "] w-[400px]"}>
+  let historyBlock = (<div></div>)
+  let blockHeight = '800px'
+  const { settings, histories } = useContexts();
+
+  if (isSettings == false) {
+    historyBlock = (
+      <div className='sectionBorder'>
+        <div className='sideBarTitle'>History</div>
+        <ScrollArea className="h-[320px] w-[400px] p-4">
+          <div>
             {
-              settings.map((setting) => (
-                <Link to={"/settings/"+setting.id.toString()} key={"link-" + setting.name}>
-                  <SettingBlock name={setting.name} image=""/>
-                </Link>
+              histories.map((history) => (
+                <HistoryBlock text={history.summary} index={history.id} key={history.id}/>
               ))
             }
-            <Link to={"/settings/0"}>
-              <SettingBlock name={"Add new setting"} image=""/>
-            </Link>
-          </ScrollArea>
-        </div>
-        {historyBlock}
-      </>
+          </div>
+        </ScrollArea>
+      </div>
     )
+    blockHeight = '400px'
   }
+
+  return (
+    <>
+      <div>
+        <div className='sideBarTitle'>Setting</div>
+        <ScrollArea className={"h-[" + blockHeight + "] w-[400px]"}>
+          {
+            settings.map((setting) => (
+              <div onClick={handleSettingClick(setting.id)} key={"clickdiv-"+setting.name}>
+                <SettingBlock name={setting.name} image=""/>
+              </div>
+            ))
+          }
+          <Link to={"/settings/0"}>
+            <SettingBlock name={"Add new setting"} image=""/>
+          </Link>
+        </ScrollArea>
+      </div>
+      {historyBlock}
+    </>
+  )
+}
+
+export default Sidebar;

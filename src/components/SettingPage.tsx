@@ -1,5 +1,5 @@
 import { InfoPopup } from './InfoPopup'
-import { Sidebar } from './Sidebar'
+import Sidebar from './Sidebar'
 import './css/SettingPage.css'
 import { SettingForm } from './SettingForm'
 import { useParams } from 'react-router-dom'
