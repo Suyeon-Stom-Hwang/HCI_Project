@@ -1,10 +1,14 @@
-import { InfoPopup } from './InfoPopup'
-import { Sidebar } from './Sidebar'
+// import { InfoPopup } from './InfoPopup'
+import Sidebar from './Sidebar'
 import { Button } from "@/components/ui/button"
 
-import './shadcn.css'
-import './MainPage.css'
-import './index.css'
+import './css/shadcn.css'
+import './css/MainPage.css'
+import '../index.css'
+import { useContexts } from '@/Contexts'
+import TranslateSetting from './api/TranslateSettings'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 interface ParagraphBoxProps {
   text: string
@@ -24,6 +28,9 @@ function KeywordBlock({tag}: KeywordBlockProps) {
 }
 
 function CurrentSettingBlock() {
+  const navigate = useNavigate();
+  const { currentSetting } = useContexts();
+
   return (
     <div className='currentSettingBlock'>
       <div className='currentSettingIcon'></div>
@@ -32,9 +39,13 @@ function CurrentSettingBlock() {
         <div>유형/형식</div>
       </div>
       <div className='currentSettingTagBlock'>
-        <KeywordBlock tag={'인공지능'}></KeywordBlock>
+        {
+          currentSetting()?.keywords.map((keyword) => (
+            <KeywordBlock tag={keyword} key={"keywordblock-"+keyword}/>
+          ))
+        }
       </div>
-      <Button className='currentSettingEditButton' variant="secondary">편집설정</Button>
+      <Button className='currentSettingEditButton' variant="secondary" onClick={() => navigate("/settings/"+currentSetting()?.id.toString())}>편집설정</Button>
     </div>
   )
 }
@@ -44,6 +55,15 @@ function ParagraphBox({text}: ParagraphBoxProps) {
 }
 
 function MainPage() {
+  const { currentSetting, addHistoryByText } = useContexts();
+  const [ text, setText ] = useState("");
+
+  const handleClick = async () => {
+    await addHistoryByText(text);
+    const newText = await TranslateSetting(currentSetting());
+    setText(newText);
+  }
+
   return (
     <>
       <div className='mainSidebar'>
@@ -52,10 +72,10 @@ function MainPage() {
       <div className='mainView sectionBorder'>
         <div className='sectionBorder'><CurrentSettingBlock/></div>
         <div>
-          <ParagraphBox text={'hello this is a paragraph box'}/>
+          <ParagraphBox text={text}/>
         </div>
         <div>
-          <Button variant={'default'}>새로운 글</Button>
+          <Button variant={'default'} onClick={handleClick}>새로운 글</Button>
         </div>
       </div>
       <div className='mainSideView sectionBorder'>
