@@ -49,7 +49,7 @@ export function Sidebar({isSettings}: SidebarProps) {
             <div>
               {
                 histories.map((history) => (
-                  <HistoryBlock text={history.summary} index={history.id}/>
+                  <HistoryBlock text={history.summary} index={history.id} key={history.id}/>
                 ))
               }
             </div>

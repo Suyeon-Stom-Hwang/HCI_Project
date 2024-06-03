@@ -8,6 +8,7 @@ import '../index.css'
 import { useContexts } from '@/Contexts'
 import TranslateSetting from './api/TranslateSettings'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 interface ParagraphBoxProps {
   text: string
@@ -27,6 +28,9 @@ function KeywordBlock({tag}: KeywordBlockProps) {
 }
 
 function CurrentSettingBlock() {
+  const navigate = useNavigate();
+  const { currentSetting } = useContexts();
+
   return (
     <div className='currentSettingBlock'>
       <div className='currentSettingIcon'></div>
@@ -35,9 +39,13 @@ function CurrentSettingBlock() {
         <div>유형/형식</div>
       </div>
       <div className='currentSettingTagBlock'>
-        <KeywordBlock tag={'인공지능'}></KeywordBlock>
+        {
+          currentSetting()?.keywords.map((keyword) => (
+            <KeywordBlock tag={keyword} key={"keywordblock-"+keyword}/>
+          ))
+        }
       </div>
-      <Button className='currentSettingEditButton' variant="secondary">편집설정</Button>
+      <Button className='currentSettingEditButton' variant="secondary" onClick={() => navigate("/settings/"+currentSetting()?.id.toString())}>편집설정</Button>
     </div>
   )
 }
