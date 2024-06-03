@@ -8,6 +8,7 @@ const generateId = () => {
 };
 
 const generateSettingId = generateId();
+const generateHistoryId = generateId();
 
 export type Setting = {
   name: string;
@@ -26,6 +27,17 @@ export type SettingInput = {
   custom: boolean;
 };
 
+export type History = {
+  text: string;
+  summary: string;
+  id: number;
+}
+
+export type HistoryInput = {
+  text: string;
+  summary: string;
+}
+
 export type SettingContextData = {
   settings: Setting[];
   currentSetting: () => Setting | null;
@@ -43,6 +55,11 @@ const SettingContext = createContext<SettingContextData>({
   changeSetting: () => null,
   setSetting: () =>  null
 });
+
+export type HistoryContextData = {
+  histories: History[];
+  
+}
 
 export function SettingProvider({ children }: { children: ReactNode }) {
   const [ settings, setSettings ] = useState<Setting[]>([]);

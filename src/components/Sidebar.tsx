@@ -1,8 +1,9 @@
-import { Component, useState } from 'react'
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 import './Sidebar.css'
 import './HistoryBlock.css'
+import { useSettingContext } from "@/Contexts";
+import { Link } from "react-router-dom";
 
 interface SettingBlockProps {
   image: string;
@@ -36,10 +37,9 @@ function SettingBlock({image, name}: SettingBlockProps) {
 }
 
 export function Sidebar({isSettings}: SidebarProps) {
-    const [count, setCount] = useState(0)
-
     let historyBlock = (<div></div>)
     let blockHeight = '800px'
+    const { settings } = useSettingContext();
 
     if (isSettings == false) {
       historyBlock = (
@@ -62,8 +62,16 @@ export function Sidebar({isSettings}: SidebarProps) {
         <div>
           <div className='sideBarTitle'>Setting</div>
           <ScrollArea className={"h-[" + blockHeight + "] w-[400px]"}>
-            <SettingBlock name={'Setting1'}/>
-            <SettingBlock name={'Setting2'}/>
+            {
+              settings.map((setting) => (
+                <Link to={"/settings/"+setting.id.toString()}>
+                  <SettingBlock name={setting.name} image=""/>
+                </Link>
+              ))
+            }
+            <Link to={"/settings/0"}>
+              <SettingBlock name={"Add new setting"} image=""/>
+            </Link>
           </ScrollArea>
         </div>
         {historyBlock}
