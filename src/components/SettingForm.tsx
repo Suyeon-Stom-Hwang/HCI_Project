@@ -31,7 +31,10 @@ const formSchema = z.object({
   difficultyLevel: z.number()
 })
 
-export function SettingForm() {
+export function SettingForm(props: {id: number}) {
+  // const { settings, getSettingById, addSetting, changeSetting } = useSettingContext();
+  // const newSetting = (props.id === 0);
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -67,7 +70,7 @@ export function SettingForm() {
                   설정을 구분하기 위한 이름입니다.
                 </FormDescription>
                 <FormControl>
-                  <Input placeholder="ex. 새로운 설정" {...field} />
+                  <Input placeholder={"ex. 새로운 설정"} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

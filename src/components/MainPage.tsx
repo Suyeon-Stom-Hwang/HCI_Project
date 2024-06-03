@@ -1,10 +1,13 @@
-import { InfoPopup } from './InfoPopup'
+// import { InfoPopup } from './InfoPopup'
 import { Sidebar } from './Sidebar'
 import { Button } from "@/components/ui/button"
 
 import './shadcn.css'
 import './MainPage.css'
 import './index.css'
+import { useSettingContext } from '@/Contexts'
+import TranslateSetting from './api/TranslateSettings'
+import { useState } from 'react'
 
 interface ParagraphBoxProps {
   text: string
@@ -44,6 +47,14 @@ function ParagraphBox({text}: ParagraphBoxProps) {
 }
 
 function MainPage() {
+  const { currentSetting } = useSettingContext();
+  const [ text, setText ] = useState("");
+
+  const handleClick = async () => {
+    const newText = await TranslateSetting(currentSetting());
+    setText(newText);
+  }
+
   return (
     <>
       <div className='mainSidebar'>
@@ -52,10 +63,10 @@ function MainPage() {
       <div className='mainView sectionBorder'>
         <div className='sectionBorder'><CurrentSettingBlock/></div>
         <div>
-          <ParagraphBox text={'hello this is a paragraph box'}/>
+          <ParagraphBox text={text}/>
         </div>
         <div>
-          <Button variant={'default'}>새로운 글</Button>
+          <Button variant={'default'} onClick={handleClick}>새로운 글</Button>
         </div>
       </div>
       <div className='mainSideView sectionBorder'>

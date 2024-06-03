@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom'
 
 function SettingPage() {
   const { id } = useParams()
+  const num_id = isNaN(Number(id)) ? 0 : Number(id);
 
   return (
     <>
@@ -13,7 +14,7 @@ function SettingPage() {
         <Sidebar isSettings={true}></Sidebar>
       </div>
       <div className='settingView'>
-        <SettingForm/>
+        <SettingForm id={num_id}/>
       </div>
       <div className='settingSideView'>
         <InfoPopup/>
