@@ -2,8 +2,11 @@ import { InfoPopup } from './InfoPopup'
 import { Sidebar } from './Sidebar'
 import './SettingPage.css'
 import { SettingForm } from './SettingForm'
+import { useParams } from 'react-router-dom'
 
 function SettingPage() {
+  const { id } = useParams()
+
   return (
     <>
       <div className='settingSidebar sectionBorder'>
