@@ -1,7 +1,9 @@
 .formButtonContainer {
-  background-color: aqua;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
 }
 
 .formButton {
-  margin-left: 10px;
+  margin-left: 20px;
 }
