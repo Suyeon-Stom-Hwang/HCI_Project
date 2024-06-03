@@ -13,7 +13,7 @@ const Router = createBrowserRouter([
         element: <MainPage />,
       },
       {
-        path: "/settings/:id",
+        path: "settings/:id",
         element: <SettingPage />,
       }
     ]

@@ -3,12 +3,12 @@ import ReactDOM from 'react-dom/client'
 import Router from './Router.tsx'
 import './index.css'
 import { RouterProvider } from "react-router-dom"
-import { SettingProvider } from "./Contexts.tsx"
+import { ContextProvider } from "./Contexts.tsx"
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <SettingProvider>
+    <ContextProvider>
       <RouterProvider router={Router} />
-    </SettingProvider>
+    </ContextProvider>
   </React.StrictMode>,
 )

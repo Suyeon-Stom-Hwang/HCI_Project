@@ -2,10 +2,10 @@
 import { Sidebar } from './Sidebar'
 import { Button } from "@/components/ui/button"
 
-import './shadcn.css'
-import './MainPage.css'
-import './index.css'
-import { useSettingContext } from '@/Contexts'
+import './css/shadcn.css'
+import './css/MainPage.css'
+import '../index.css'
+import { useContexts } from '@/Contexts'
 import TranslateSetting from './api/TranslateSettings'
 import { useState } from 'react'
 
@@ -47,10 +47,11 @@ function ParagraphBox({text}: ParagraphBoxProps) {
 }
 
 function MainPage() {
-  const { currentSetting } = useSettingContext();
+  const { currentSetting, addHistoryByText } = useContexts();
   const [ text, setText ] = useState("");
 
   const handleClick = async () => {
+    await addHistoryByText(text);
     const newText = await TranslateSetting(currentSetting());
     setText(newText);
   }

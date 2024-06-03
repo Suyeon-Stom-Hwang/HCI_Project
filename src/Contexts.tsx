@@ -1,4 +1,5 @@
 import { ReactNode, createContext, useContext, useState } from "react";
+import generateSummary from "./components/api/GenerateSummary";
 
 const generateId = () => {
   let counter = 1;
@@ -38,32 +39,46 @@ export type HistoryInput = {
   summary: string;
 }
 
-export type SettingContextData = {
+export type ContextData = {
   settings: Setting[];
   currentSetting: () => Setting | null;
   getSettingById: (id: number) => Setting | null;
   addSetting: (setting: SettingInput) => Setting | null;
   changeSetting: (setting: SettingInput, id: number) => Setting | null;
   setSetting: (id: number) => Setting | null;
+  
+  histories: History[];
+  addHistory: (history: HistoryInput) => History | null;
+  addHistoryByText: (text: string) => Promise<History> | null;
+  getHistoryById: (id: number) => History | null;
 };
 
-const SettingContext = createContext<SettingContextData>({
+const Context = createContext<ContextData>({
   settings: [],
   currentSetting: () => null,
   getSettingById: () => null,
   addSetting: () => null,
   changeSetting: () => null,
-  setSetting: () =>  null
+  setSetting: () =>  null,
+  histories: [],
+  addHistory: () => null,
+  addHistoryByText: () => null,
+  getHistoryById: () => null
 });
 
-export type HistoryContextData = {
-  histories: History[];
-  
+const defaultSetting: Setting = {
+  name: "test",
+  keywords: ["인공지능", "컴퓨터", "언어"],
+  format: "신문",
+  li: 80,
+  custom: false,
+  id: 100
 }
 
-export function SettingProvider({ children }: { children: ReactNode }) {
-  const [ settings, setSettings ] = useState<Setting[]>([]);
-  const [ currentId, setCurrentId ] = useState(0);
+export function ContextProvider({ children }: { children: ReactNode }) {
+  const [ settings, setSettings ] = useState<Setting[]>([defaultSetting]);
+  const [ currentId, setCurrentId ] = useState(100);
+  const [ histories, setHistories ] = useState<History[]>([]);
   const getSettingById = (id: number) => {
     return settings.find((setting: Setting) => setting.id === id) || null;
   };
@@ -88,20 +103,37 @@ export function SettingProvider({ children }: { children: ReactNode }) {
     return foundSetting?foundSetting:null
   }
 
+  const addHistory = (history: HistoryInput) => {
+    const newHistory = {id: generateHistoryId(), text: history.text, summary: history.summary};
+    setHistories([newHistory, ...histories]);
+    return newHistory;
+  }
+  const addHistoryByText = async (text: string) => {
+    const summary = await generateSummary(text);
+    return addHistory({text: text, summary: summary});
+  }
+  const getHistoryById = (id: number) => {
+    return histories.find((history: History) => history.id === id) || null;
+  }
+
   return (
-    <SettingContext.Provider
+    <Context.Provider
       value={{
         settings,
         currentSetting,
         getSettingById,
         addSetting,
         changeSetting,
-        setSetting
+        setSetting,
+        histories,
+        addHistory,
+        addHistoryByText,
+        getHistoryById
       }}
     >
       {children}
-    </SettingContext.Provider>
+    </Context.Provider>
   )
 }
 
-export const useSettingContext = () => useContext(SettingContext);
+export const useContexts = () => useContext(Context);

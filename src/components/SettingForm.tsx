@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import './shadcn.css'
+import './css/shadcn.css'
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
@@ -23,17 +23,19 @@ import {
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Label } from '@radix-ui/react-label'
+import { useContexts } from "@/Contexts"
+import { useNavigate } from "react-router-dom"
 
 const formSchema = z.object({
-  settingName: z.string().max(50),
+  settingName: z.string().min(2).max(50),
   essentialKeyword: z.string().max(50),
   formatCategory: z.string({required_error: "원하는 유형을 선택해주세요"}),
-  difficultyLevel: z.number()
+  difficultyLevel: z.number().array()
 })
 
 export function SettingForm(props: {id: number}) {
-  // const { settings, getSettingById, addSetting, changeSetting } = useSettingContext();
-  // const newSetting = (props.id === 0);
+  const { addSetting, setSetting, changeSetting } = useContexts();
+  const navigate = useNavigate();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -42,7 +44,7 @@ export function SettingForm(props: {id: number}) {
       settingName: "",
       essentialKeyword: "",
       formatCategory: "뉴스",
-      difficultyLevel: 50,
+      difficultyLevel: [50],
     },
   })
 
@@ -50,7 +52,15 @@ export function SettingForm(props: {id: number}) {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values)
+    const settingStruct = {name: values.settingName, keywords: [values.essentialKeyword], format: values.formatCategory, li: values.difficultyLevel[0], custom: false};
+    if(props.id === 0) {
+      const sret = addSetting(settingStruct);
+      if(sret !== null) setSetting(sret.id);
+    } else {
+      const sret = changeSetting(settingStruct, props.id);
+      if(sret !== null) setSetting(sret.id);
+    }
+    navigate("/")
   }
 
   return (
@@ -126,7 +136,7 @@ export function SettingForm(props: {id: number}) {
                 <FormDescription className='textSubDescription'>
                   생성되는 지문의 읽기 난이도를 설정합니다. 난이도는 Lexile measures를 통해 평가됩니다.
                 </FormDescription>
-                <Slider onValueChange={field.onChange} defaultValue={[field.value]} max={100} step={1} />
+                <Slider onValueChange={field.onChange} defaultValue={field.value} max={100} step={1} />
                 <FormMessage />
               </FormItem>
             )}
@@ -137,7 +147,7 @@ export function SettingForm(props: {id: number}) {
           </div>
           <div className='formButtonContainer'>
             <Button type="submit">저장</Button>
-            <Button variant="secondary">취소</Button>
+            <Button variant="secondary" onClick={() => navigate("/")}>취소</Button>
           </div>
         </form>
       </Form>

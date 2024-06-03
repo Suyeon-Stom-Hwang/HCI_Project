@@ -1,3 +1,4 @@
+/*
 import OpenAI from 'openai';
 
 const openai = new OpenAI();
@@ -10,8 +11,10 @@ interface Message {
 const conversationHistory: Message[] = [
   { role: 'system', content: 'You are a helpful assistant.' }
 ];
+*/
 
 async function prompts(question: string): Promise<string>{
+  /*
   try {
     conversationHistory.push({ role: 'user', content: question });
 
@@ -32,6 +35,8 @@ async function prompts(question: string): Promise<string>{
 
     return "";
   }
+  */
+  return question + "Hello World!";
 }
 
 export default prompts;
