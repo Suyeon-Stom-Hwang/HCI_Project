@@ -46,7 +46,7 @@ export function SettingForm(props: {id: number}) {
     defaultValues: {
       settingName: (props.id === 0 || curSet === null)?"":curSet.name,
       essentialKeyword: (props.id === 0 || curSet === null)?"":curSet.keywords[0],
-      formatCategory: (props.id === 0 || curSet === null)?"뉴스":curSet.format,
+      formatCategory: (props.id === 0 || curSet === null)?"news":curSet.format,
       difficultyLevel: (props.id === 0 || curSet === null)?[50]:[curSet.li],
     },
   })

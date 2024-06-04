@@ -69,7 +69,7 @@ const Context = createContext<ContextData>({
 const defaultSetting: Setting = {
   name: "test",
   keywords: ["인공지능", "컴퓨터", "언어"],
-  format: "신문",
+  format: "news",
   li: 80,
   custom: false,
   id: 100
