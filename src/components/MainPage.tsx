@@ -76,12 +76,12 @@ function CurrentSettingBlock() {
           ))
         }
         </div>
-      </div>
         <div className='currentKeywords'>
           {
             <FormatBlock>{currentSetting()?.format}</FormatBlock>
           }
         </div>
+      </div>
       <Button className='currentSettingEditButton' variant="secondary" onClick={() => navigate("/settings/"+currentSetting()?.id.toString())}>편집설정</Button>
     </div>
   )
@@ -103,19 +103,16 @@ function MainPage() {
 
   return (
     <>
-      <div className='mainSidebar sectionBorder'>
-        <Sidebar isSettings={false}></Sidebar>
+      <div className='sidebarView sectionBorder'>
+        <Sidebar isSettings={false}/>
       </div>
 
       <div className='mainView sectionBorder'>
         <div className='sectionBorderOnlyBottom'>
           <CurrentSettingBlock/>
-        <div className='sectionBorder'><CurrentSettingBlock/></div>
-        <div>
-          <ParagraphBox>{text}</ParagraphBox>
         </div>
         <div>
-          <Button variant={'default'} onClick={handleClick}>새로운 글</Button>
+          <ParagraphBox>{text}</ParagraphBox>
         </div>
       </div>
 
@@ -126,10 +123,12 @@ function MainPage() {
           <div className='space-y-3'>
             <RadioGroup defaultValue="comfortable" >
               <div className='textSubTitle'>글은 만족스러운가요?</div>
+
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="up" id="r1" />
                 <Label className='textTitle' htmlFor="r1">👍</Label>
               </div>
+
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="down" id="r2" />
                 <Label className='textTitle' htmlFor="r2">👎</Label>
@@ -137,25 +136,26 @@ function MainPage() {
             </RadioGroup>
           </div>
           
-          <div>
-            <div className='textSubTitle'>글의 내용이 이해되나요?</div>
-            <RadioGroup defaultValue="comfortable">
+          <div className='space-y-3'>
+            <RadioGroup defaultValue="comfortable" >
+              <div className='textSubTitle'>글의 내용이 이해되나요?</div>
+
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="up" id="r1" />
                 <Label className='textTitle' htmlFor="r1">⭕</Label>
               </div>
+
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="down" id="r2" />
                 <Label className='textTitle' htmlFor="r2">❌</Label>
               </div>
             </RadioGroup>
           </div>
+          
           <div>
-            <Button variant={'default'}>새로운 글</Button>
+            <Button variant={'default'} onClick={handleClick}>새로운 글</Button>
           </div>
         </div>
-      </div>
-
       </div>
     </>
   )

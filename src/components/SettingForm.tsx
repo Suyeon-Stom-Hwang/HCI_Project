@@ -144,7 +144,7 @@ export function SettingForm(props: {id: number}) {
             />
           <div>
             <Label className='textSubTitle'>미리보기</Label>
-            <Textarea></Textarea>
+            <Textarea className='resize-none'></Textarea>
           </div>
           <div className='formButtonContainer'>
             <Button className="formButton" type="submit">저장</Button>

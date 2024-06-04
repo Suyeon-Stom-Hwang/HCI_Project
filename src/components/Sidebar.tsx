@@ -1,5 +1,4 @@
 import './css/Sidebar.css'
-import './css/HistoryBlock.css'
 
 import newSetting from "../assets/newSetting.svg"
 

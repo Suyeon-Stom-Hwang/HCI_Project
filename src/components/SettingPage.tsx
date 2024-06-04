@@ -1,5 +1,6 @@
 import "./css/shadcn.css"
 import './css/SettingPage.css'
+import '../index.css'
 
 import Sidebar from './Sidebar'
 import { SettingForm } from './SettingForm'
@@ -31,13 +32,13 @@ function SettingPage() {
 
   return (
     <>
-      <div className='settingSidebar sectionBorder'>
+      <div className='sidebarView sectionBorder'>
         <Sidebar isSettings={true}></Sidebar>
       </div>
       <div className='settingView sectionBorder'>
-          <SettingForm id={num_id} />
+        <SettingForm id={num_id} />
       </div>
-      <div className='settingSideView'>
+      <div className='settingSideView sectionBorder'>
         <InfoPopup/>
       </div>
     </>

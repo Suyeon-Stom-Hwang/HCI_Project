@@ -34,12 +34,15 @@
 }
 
 .historyBlock {
-  width: 352px;
+  width: 360px;
   height: 40px;
   line-height: 40px;
-  text-indent: 10px;
+  padding: 0px 10px 0px 10px;
   margin-bottom: 12px;
-  border-radius: 16px 16px 4px 16px;
+  border-radius: 16px 16px 6px 16px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .historyBlockPositive {
