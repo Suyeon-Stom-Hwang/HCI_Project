@@ -1,0 +1,9 @@
+.formButtonContainer {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+}
+
+.formButton {
+  margin-left: 20px;
+}
