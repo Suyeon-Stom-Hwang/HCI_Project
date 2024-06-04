@@ -13,7 +13,7 @@ import { ReactNode, useState } from 'react'
 import { useContexts } from '@/Contexts'
 import TranslateSetting from './api/TranslateSettings'
 import { useNavigate } from 'react-router-dom'
-import { LucideTable2 } from 'lucide-react'
+// import { LucideTable2 } from 'lucide-react'
 
 interface DictionaryPopupProps {
   word: string;

@@ -35,17 +35,19 @@ const formSchema = z.object({
 })
 
 export function SettingForm(props: {id: number}) {
-  const { addSetting, setSetting, changeSetting } = useContexts();
+  const { addSetting, changeSetting, currentSetting } = useContexts();
   const navigate = useNavigate();
+
+  const curSet = currentSetting();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      settingName: "",
-      essentialKeyword: "",
-      formatCategory: "뉴스",
-      difficultyLevel: [50],
+      settingName: (props.id === 0 || curSet === null)?"":curSet.name,
+      essentialKeyword: (props.id === 0 || curSet === null)?"":curSet.keywords[0],
+      formatCategory: (props.id === 0 || curSet === null)?"뉴스":curSet.format,
+      difficultyLevel: (props.id === 0 || curSet === null)?[50]:[curSet.li],
     },
   })
 
@@ -55,11 +57,9 @@ export function SettingForm(props: {id: number}) {
     // ✅ This will be type-safe and validated.
     const settingStruct = {name: values.settingName, keywords: [values.essentialKeyword], format: values.formatCategory, li: values.difficultyLevel[0], custom: false};
     if(props.id === 0) {
-      const sret = addSetting(settingStruct);
-      if(sret !== null) setSetting(sret.id);
+      addSetting(settingStruct);
     } else {
-      const sret = changeSetting(settingStruct, props.id);
-      if(sret !== null) setSetting(sret.id);
+      changeSetting(settingStruct, props.id);
     }
     navigate("/")
   }
@@ -81,7 +81,10 @@ export function SettingForm(props: {id: number}) {
                   설정을 구분하기 위한 이름입니다.
                 </FormDescription>
                 <FormControl>
-                  <Input placeholder={"ex. 새로운 설정"} {...field} />
+                  <Input 
+                    placeholder={(props.id===0 || curSet === null)?"ex. 새로운 설정":""}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -97,7 +100,10 @@ export function SettingForm(props: {id: number}) {
                   지문에 반드시 포함되어야 할 키워드들입니다. 관심있는 단어들을 추가해 보세요.
                 </FormDescription>
                 <FormControl>
-                  <Input placeholder="ex. 인공지능" {...field} />
+                  <Input
+                    placeholder={(props.id === 0 || curSet === null)?"ex. 인공지능":""}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -115,7 +121,7 @@ export function SettingForm(props: {id: number}) {
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder={field.value} />
+                      <SelectValue placeholder={field.value}/>
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
