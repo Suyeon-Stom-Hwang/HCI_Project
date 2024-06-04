@@ -35,7 +35,7 @@ const formSchema = z.object({
 })
 
 export function SettingForm(props: {id: number}) {
-  const { addSetting, setSetting, changeSetting, currentSetting } = useContexts();
+  const { addSetting, changeSetting, currentSetting } = useContexts();
   const navigate = useNavigate();
 
   const curSet = currentSetting();
