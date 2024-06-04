@@ -57,11 +57,9 @@ export function SettingForm(props: {id: number}) {
     // ✅ This will be type-safe and validated.
     const settingStruct = {name: values.settingName, keywords: [values.essentialKeyword], format: values.formatCategory, li: values.difficultyLevel[0], custom: false};
     if(props.id === 0) {
-      const sret = addSetting(settingStruct);
-      if(sret !== null) setSetting(sret.id);
+      addSetting(settingStruct);
     } else {
-      const sret = changeSetting(settingStruct, props.id);
-      if(sret !== null) setSetting(sret.id);
+      changeSetting(settingStruct, props.id);
     }
     navigate("/")
   }

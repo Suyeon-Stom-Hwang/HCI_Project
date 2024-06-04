@@ -85,12 +85,14 @@ export function ContextProvider({ children }: { children: ReactNode }) {
   const addSetting = (setting: SettingInput) => {
     const newSetting = {id: generateSettingId(), name: setting.name, keywords: setting.keywords, format: setting.format, li: setting.li, custom: setting.custom};
     setSettings([newSetting, ...settings]);
+    setCurrentId(newSetting.id);
     return newSetting;
   };
   const changeSetting = (setting: SettingInput, id: number) => {
     if(!getSettingById(id)) return null;
     const newSetting = {id: id, name: setting.name, keywords: setting.keywords, format: setting.format, li: setting.li, custom: setting.custom};
     setSettings([newSetting, ...settings.filter((setting) => setting.id !== id)]);
+    setCurrentId(id);
     return newSetting;
   }
   const setSetting = (id: number) => {
