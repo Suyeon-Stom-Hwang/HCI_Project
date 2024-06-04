@@ -1,26 +1,3 @@
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
-
 .textTitle {
   font-size: 20px;
   font-weight: bold;
@@ -50,4 +27,18 @@ a:hover {
   border-color: #92a785;
   border-width: 1px;
   border-style: solid;
+}
+
+.sectionBorderOnlyBottom {
+  border-color: #92a785;
+  border-width: 0px 0px 1px 0px;
+  border-style: solid;
+}
+
+.sidebarView {
+  width: 400px;
+  height: 900px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
 }

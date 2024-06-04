@@ -1,8 +1,6 @@
 .sideBarTitle {
   padding-top: 24px;
   padding-left: 24px;
-  font-size: 20px;
-  font-weight: bold;
 }
 
 .settingBlock:hover {
@@ -20,19 +18,37 @@
   padding-right: 16px;
   padding-top: 12px;
   padding-bottom: 12px;
-  display: grid;
+  display: flex;
 }
 
 .settingBlockIcon {
   width: 64px;
   height: 64px;
-  background-color: bisque;
-  grid-column: 1;
+  margin-right: 16px;
 }
 
 .settingBlockText {
   width: 288px;
   height: 64px;
   line-height: 64px;
-  grid-column: 2;
+}
+
+.historyBlock {
+  width: 360px;
+  height: 40px;
+  line-height: 40px;
+  padding: 0px 10px 0px 10px;
+  margin-bottom: 12px;
+  border-radius: 16px 16px 6px 16px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.historyBlockPositive {
+  background-color: #E4EFD3;
+}
+
+.historyBlockNegative {
+  background-color: #e0e0e0;
 }
