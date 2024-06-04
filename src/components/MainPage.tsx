@@ -96,7 +96,7 @@ function MainPage() {
   const [ text, setText ] = useState("");
 
   const handleClick = async () => {
-    await addHistoryByText(text);
+    if(text !== "") await addHistoryByText(text);
     const newText = await TranslateSetting(currentSetting());
     setText(newText);
   }
