@@ -45,7 +45,7 @@ export function SettingForm(props: {id: number}) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       settingName: (props.id === 0 || curSet === null)?"":curSet.name,
-      essentialKeyword: (props.id === 0 || curSet === null)?"":curSet.keywords[0],
+      essentialKeyword: (props.id === 0 || curSet === null)?"":curSet.keywords.join(", "),
       formatCategory: (props.id === 0 || curSet === null)?"news":curSet.format,
       difficultyLevel: (props.id === 0 || curSet === null)?[50]:[curSet.li],
     },
@@ -55,7 +55,7 @@ export function SettingForm(props: {id: number}) {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    const settingStruct = {name: values.settingName, keywords: [values.essentialKeyword], format: values.formatCategory, li: values.difficultyLevel[0], custom: false};
+    const settingStruct = {name: values.settingName, keywords: values.essentialKeyword.split(",").map(x => x.trim()), format: values.formatCategory, li: values.difficultyLevel[0], custom: false};
     if(props.id === 0) {
       addSetting(settingStruct);
     } else {
@@ -97,11 +97,11 @@ export function SettingForm(props: {id: number}) {
               <FormItem>
                 <FormLabel className='textSubTitle'>필수 키워드</FormLabel>
                 <FormDescription className='textSubDescription'>
-                  지문에 반드시 포함되어야 할 키워드들입니다. 관심있는 단어들을 추가해 보세요.
+                  지문에 반드시 포함되어야 할 키워드들입니다. 관심있는 단어들을 추가해 보세요. 여러 개의 키워드를 추가할 때에는 쉼표로 구분합니다.
                 </FormDescription>
                 <FormControl>
                   <Input
-                    placeholder={(props.id === 0 || curSet === null)?"ex. 인공지능":""}
+                    placeholder={(props.id === 0 || curSet === null)?"ex. 인공지능, 컴퓨터":""}
                     {...field}
                   />
                 </FormControl>

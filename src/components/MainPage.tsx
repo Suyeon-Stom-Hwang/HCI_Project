@@ -26,26 +26,14 @@ interface ParagraphBoxProps {
 
 interface KeywordBlockProps {
   children: ReactNode
+  index: number
 }
 
-function KeywordBlock({children}: KeywordBlockProps) {
-  return (
-    <div className='keywordBlock'>
-      <span>{children}</span>
-      <img src={deleteKeyword}></img>
-    </div>
-  )
+interface FormatBlockProps {
+  children: ReactNode
 }
 
-function FormatBlock({children}: KeywordBlockProps) {
-  return (
-    <div id='formatBlock' className='textSubTitle'>
-      {children}
-    </div>
-  )
-}
-
-export function DictionaryPopup({word, description}: DictionaryPopupProps) {
+const DictionaryPopup = ({word, description}: DictionaryPopupProps) => {
     return (
       <div id="dictionaryPopup">
         <div className='rightAlign'>
@@ -57,9 +45,26 @@ export function DictionaryPopup({word, description}: DictionaryPopupProps) {
     )
   }
 
-function CurrentSettingBlock() {
+const CurrentSettingBlock = () => {
   const navigate = useNavigate();
-  const { currentSetting } = useContexts();
+  const { currentSetting, removeKeyword } = useContexts();
+
+  const KeywordBlock = ({children, index}: KeywordBlockProps) => {
+    return (
+      <div className='keywordBlock'>
+        <span>{children}</span>
+        <img src={deleteKeyword} onClick={() => removeKeyword(index)}></img>
+      </div>
+    )
+  }
+  
+  const FormatBlock = ({children}: FormatBlockProps) => {
+    return (
+      <div id='formatBlock' className='textSubTitle'>
+        {children}
+      </div>
+    )
+  }
 
   return (
     <div className='currentSettingBlock'>
@@ -71,8 +76,8 @@ function CurrentSettingBlock() {
       <div className='currentSettingTagBlock'>
         <div className='currentKeywords'>
         {
-          currentSetting()?.keywords.map((keyword) => (
-            <KeywordBlock key={"keywordblock-"+keyword}>{keyword}</KeywordBlock>
+          currentSetting()?.keywords.map((keyword, idx) => (
+            <KeywordBlock key={"keywordblock-"+keyword} index={idx}>{keyword}</KeywordBlock>
           ))
         }
         </div>
