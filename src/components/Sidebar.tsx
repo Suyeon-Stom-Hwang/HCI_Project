@@ -4,7 +4,7 @@ import newSetting from "../assets/newSetting.svg"
 
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useContexts } from "@/Contexts";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { ReactNode } from 'react';
 
 interface SettingBlockProps {
@@ -53,7 +53,7 @@ function SettingBlock({image, isSelected, children}: SettingBlockProps) {
 }
 
 const Sidebar = ({isSettings}: SidebarProps) => {
-  const { setSetting } = useContexts();
+  const { setSetting, currentSetting } = useContexts();
   const navigate = useNavigate();
 
   const handleSettingClick = (id: number) => () => {
@@ -83,20 +83,27 @@ const Sidebar = ({isSettings}: SidebarProps) => {
     blockHeight = '400px'
   }
 
+  const selectedSetting = currentSetting();
+  const isNewSettingSelected = useLocation().pathname == "/settings/0";
+
   return (
     <>
       <div className='sectionBorderOnlyBottom'>
         <div className='sideBarTitle textViewTitle'>Setting</div>
         <ScrollArea className={"h-[" + blockHeight + "] w-[400px]"}>
           {
-            settings.map((setting) => (
+            settings.map((setting) => {
+              const isSelected = (selectedSetting?.id === setting.id);
+
+              return (
               <div onClick={handleSettingClick(setting.id)} key={"clickdiv-"+setting.name}>
-                <SettingBlock isSelected={false} image="">{setting.name}</SettingBlock>
+                <SettingBlock isSelected={!isNewSettingSelected && isSelected} image="">{setting.name}</SettingBlock>
               </div>
-            ))
+              )
+            })
           }
           <Link to={"/settings/0"}>
-            <SettingBlock isSelected={false} image={newSetting}>Add new setting</SettingBlock>
+            <SettingBlock isSelected={isNewSettingSelected} image={newSetting}>Add new setting</SettingBlock>
           </Link>
         </ScrollArea>
       </div>
