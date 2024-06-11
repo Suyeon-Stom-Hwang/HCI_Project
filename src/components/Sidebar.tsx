@@ -83,13 +83,8 @@ const Sidebar = ({isSettings}: SidebarProps) => {
     blockHeight = '400px'
   }
 
-  let selectedSetting = undefined;
-  let isNewSettingSelected = false;
-  if (useLocation().pathname == "/settings/0") {
-    isNewSettingSelected = true;
-  } else {
-    selectedSetting = currentSetting();
-  }
+  const selectedSetting = currentSetting();
+  const isNewSettingSelected = useLocation().pathname == "/settings/0";
 
   return (
     <>
@@ -98,17 +93,14 @@ const Sidebar = ({isSettings}: SidebarProps) => {
         <ScrollArea className={"h-[" + blockHeight + "] w-[400px]"}>
           {
             settings.map((setting) => {
-              let isSelected = false;
-              if (selectedSetting == setting) {
-                isSelected = true;
-              }
+              const isSelected = (selectedSetting?.id === setting.id);
 
               return (
               <div onClick={handleSettingClick(setting.id)} key={"clickdiv-"+setting.name}>
-                <SettingBlock isSelected={isSelected} image="">{setting.name}</SettingBlock>
+                <SettingBlock isSelected={!isNewSettingSelected && isSelected} image="">{setting.name}</SettingBlock>
               </div>
-              )}
-          )
+              )
+            })
           }
           <Link to={"/settings/0"}>
             <SettingBlock isSelected={isNewSettingSelected} image={newSetting}>Add new setting</SettingBlock>
