@@ -48,6 +48,7 @@ export type ContextData = {
   setSetting: (id: number) => Setting | null;
   removeKeyword: (idx: number, id?: number) => Setting | null;
   changeFormat: (format: string, id?: number) => Setting | null;
+  getPredfinedFormats: () => Object;
   
   histories: History[];
   addHistory: (history: HistoryInput) => History | null;
@@ -64,6 +65,7 @@ const Context = createContext<ContextData>({
   setSetting: () =>  null,
   removeKeyword: () => null,
   changeFormat: () => null,
+  getPredfinedFormats: () => null,
   histories: [],
   addHistory: () => null,
   addHistoryByText: () => null,
@@ -77,7 +79,13 @@ const defaultSetting: Setting = {
   li: 80,
   custom: false,
   id: 100
-}
+};
+
+const formats = {
+  news: "뉴스",
+  fiction: "소설",
+  academicPaper: "논문"
+};
 
 export function ContextProvider({ children }: { children: ReactNode }) {
   const [ settings, setSettings ] = useState<Setting[]>([defaultSetting]);
@@ -133,6 +141,7 @@ export function ContextProvider({ children }: { children: ReactNode }) {
     }
     return changeSetting(newSetting, id);
   }
+  const getPredfinedFormats = () => formats;
 
   const addHistory = (history: HistoryInput) => {
     const newHistory = {id: generateHistoryId(), text: history.text, summary: history.summary};
@@ -158,6 +167,7 @@ export function ContextProvider({ children }: { children: ReactNode }) {
         setSetting,
         removeKeyword,
         changeFormat,
+        getPredfinedFormats,
         histories,
         addHistory,
         addHistoryByText,

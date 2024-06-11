@@ -54,7 +54,7 @@ const DictionaryPopup = ({word, description}: DictionaryPopupProps) => {
 
 const CurrentSettingBlock = () => {
   const navigate = useNavigate();
-  const { currentSetting, removeKeyword, changeFormat } = useContexts();
+  const { currentSetting, removeKeyword, changeFormat, getPredfinedFormats } = useContexts();
 
   const KeywordBlock = ({children, index}: KeywordBlockProps) => {
     return (
@@ -72,9 +72,11 @@ const CurrentSettingBlock = () => {
           <SelectValue placeholder="Format"/>
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="news">뉴스</SelectItem>
-          <SelectItem value="fiction">소설</SelectItem>
-          <SelectItem value="academicPaper">논문</SelectItem>
+          {
+            Object.entries(getPredfinedFormats()).map((entry, idx) => (
+              <SelectItem value={entry[0]}>{entry[1]}</SelectItem>
+            ))
+          }
         </SelectContent>
       </Select>
     )
