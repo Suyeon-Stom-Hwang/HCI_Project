@@ -4,7 +4,7 @@ import newSetting from "../assets/newSetting.svg"
 
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useContexts } from "@/Contexts";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { ReactNode } from 'react';
 
 interface SettingBlockProps {
@@ -83,7 +83,13 @@ const Sidebar = ({isSettings}: SidebarProps) => {
     blockHeight = '400px'
   }
 
-  const selectedSetting = currentSetting();
+  let selectedSetting = undefined;
+  let isNewSettingSelected = false;
+  if (useLocation().pathname == "/settings/0") {
+    isNewSettingSelected = true;
+  } else {
+    selectedSetting = currentSetting();
+  }
 
   return (
     <>
@@ -105,7 +111,7 @@ const Sidebar = ({isSettings}: SidebarProps) => {
           )
           }
           <Link to={"/settings/0"}>
-            <SettingBlock isSelected={false} image={newSetting}>Add new setting</SettingBlock>
+            <SettingBlock isSelected={isNewSettingSelected} image={newSetting}>Add new setting</SettingBlock>
           </Link>
         </ScrollArea>
       </div>
