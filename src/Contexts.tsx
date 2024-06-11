@@ -47,6 +47,7 @@ export type ContextData = {
   changeSetting: (setting: SettingInput, id: number) => Setting | null;
   setSetting: (id: number) => Setting | null;
   removeKeyword: (idx: number, id?: number) => Setting | null;
+  changeFormat: (format: string, id?: number) => Setting | null;
   
   histories: History[];
   addHistory: (history: HistoryInput) => History | null;
@@ -62,6 +63,7 @@ const Context = createContext<ContextData>({
   changeSetting: () => null,
   setSetting: () =>  null,
   removeKeyword: () => null,
+  changeFormat: () => null,
   histories: [],
   addHistory: () => null,
   addHistoryByText: () => null,
@@ -119,6 +121,18 @@ export function ContextProvider({ children }: { children: ReactNode }) {
     }
     return changeSetting(newSetting, id);
   }
+  const changeFormat = (format: string, id: number = currentId) => {
+    const foundSetting = getSettingById(id);
+    if(foundSetting === null) return null;
+    const newSetting = {
+      name: foundSetting.name,
+      format: format,
+      li: foundSetting.li,
+      custom: foundSetting.custom,
+      keywords: foundSetting.keywords,
+    }
+    return changeSetting(newSetting, id);
+  }
 
   const addHistory = (history: HistoryInput) => {
     const newHistory = {id: generateHistoryId(), text: history.text, summary: history.summary};
@@ -143,6 +157,7 @@ export function ContextProvider({ children }: { children: ReactNode }) {
         changeSetting,
         setSetting,
         removeKeyword,
+        changeFormat,
         histories,
         addHistory,
         addHistoryByText,

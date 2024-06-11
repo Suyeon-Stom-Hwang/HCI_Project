@@ -14,6 +14,13 @@ import { useContexts } from '@/Contexts'
 import TranslateSetting from './api/TranslateSettings'
 import { useNavigate } from 'react-router-dom'
 // import { LucideTable2 } from 'lucide-react'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface DictionaryPopupProps {
   word: string;
@@ -30,7 +37,7 @@ interface KeywordBlockProps {
 }
 
 interface FormatBlockProps {
-  children: ReactNode
+  format: string | undefined
 }
 
 const DictionaryPopup = ({word, description}: DictionaryPopupProps) => {
@@ -47,7 +54,7 @@ const DictionaryPopup = ({word, description}: DictionaryPopupProps) => {
 
 const CurrentSettingBlock = () => {
   const navigate = useNavigate();
-  const { currentSetting, removeKeyword } = useContexts();
+  const { currentSetting, removeKeyword, changeFormat } = useContexts();
 
   const KeywordBlock = ({children, index}: KeywordBlockProps) => {
     return (
@@ -58,11 +65,18 @@ const CurrentSettingBlock = () => {
     )
   }
   
-  const FormatBlock = ({children}: FormatBlockProps) => {
+  const FormatBlock = ({format}: FormatBlockProps) => {
     return (
-      <div id='formatBlock' className='textSubTitle'>
-        {children}
-      </div>
+      <Select onValueChange={(value) => changeFormat(value)} defaultValue={format} >
+        <SelectTrigger>
+          <SelectValue placeholder="Format"/>
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="news">뉴스</SelectItem>
+          <SelectItem value="fiction">소설</SelectItem>
+          <SelectItem value="academicPaper">논문</SelectItem>
+        </SelectContent>
+      </Select>
     )
   }
 
@@ -81,10 +95,8 @@ const CurrentSettingBlock = () => {
           ))
         }
         </div>
-        <div className='currentKeywords'>
-          {
-            <FormatBlock>{currentSetting()?.format}</FormatBlock>
-          }
+        <div className='currentKeywords textSubTitle'>
+            <FormatBlock format={currentSetting()?.format}/>
         </div>
       </div>
       <Button className='currentSettingEditButton' variant="secondary" onClick={() => navigate("/settings/"+currentSetting()?.id.toString())}>편집설정</Button>
