@@ -53,7 +53,7 @@ function SettingBlock({image, isSelected, children}: SettingBlockProps) {
 }
 
 const Sidebar = ({isSettings}: SidebarProps) => {
-  const { setSetting } = useContexts();
+  const { setSetting, currentSetting } = useContexts();
   const navigate = useNavigate();
 
   const handleSettingClick = (id: number) => () => {
@@ -83,17 +83,26 @@ const Sidebar = ({isSettings}: SidebarProps) => {
     blockHeight = '400px'
   }
 
+  const selectedSetting = currentSetting();
+
   return (
     <>
       <div className='sectionBorderOnlyBottom'>
         <div className='sideBarTitle textViewTitle'>Setting</div>
         <ScrollArea className={"h-[" + blockHeight + "] w-[400px]"}>
           {
-            settings.map((setting) => (
+            settings.map((setting) => {
+              let isSelected = false;
+              if (selectedSetting == setting) {
+                isSelected = true;
+              }
+
+              return (
               <div onClick={handleSettingClick(setting.id)} key={"clickdiv-"+setting.name}>
-                <SettingBlock isSelected={false} image="">{setting.name}</SettingBlock>
+                <SettingBlock isSelected={isSelected} image="">{setting.name}</SettingBlock>
               </div>
-            ))
+              )}
+          )
           }
           <Link to={"/settings/0"}>
             <SettingBlock isSelected={false} image={newSetting}>Add new setting</SettingBlock>
