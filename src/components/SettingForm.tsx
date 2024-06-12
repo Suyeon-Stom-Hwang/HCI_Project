@@ -35,7 +35,7 @@ const formSchema = z.object({
 })
 
 export function SettingForm(props: {id: number}) {
-  const { addSetting, changeSetting, currentSetting, getPredfinedFormats } = useContexts();
+  const { addSetting, changeSetting, currentSetting, getPredefinedFormats } = useContexts();
   const navigate = useNavigate();
 
   const curSet = currentSetting();
@@ -126,8 +126,8 @@ export function SettingForm(props: {id: number}) {
                   </FormControl>
                   <SelectContent>
                   {
-                    Object.entries(getPredfinedFormats()).map((entry, idx) => (
-                      <SelectItem value={entry[0]}>{entry[1]}</SelectItem>
+                    getPredefinedFormats().map((entry) => (
+                      <SelectItem value={entry.formatEN}>{entry.formatKR}</SelectItem>
                     ))
                   }
                   </SelectContent>

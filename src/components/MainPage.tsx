@@ -54,7 +54,7 @@ const DictionaryPopup = ({word, description}: DictionaryPopupProps) => {
 
 const CurrentSettingBlock = () => {
   const navigate = useNavigate();
-  const { currentSetting, removeKeyword, changeFormat, getPredfinedFormats } = useContexts();
+  const { currentSetting, removeKeyword, changeFormat, getPredefinedFormats } = useContexts();
 
   const KeywordBlock = ({children, index}: KeywordBlockProps) => {
     return (
@@ -73,8 +73,8 @@ const CurrentSettingBlock = () => {
         </SelectTrigger>
         <SelectContent>
           {
-            Object.entries(getPredfinedFormats()).map((entry, idx) => (
-              <SelectItem value={entry[0]}>{entry[1]}</SelectItem>
+            getPredefinedFormats().map((entry) => (
+              <SelectItem value={entry.formatEN}>{entry.formatKR}</SelectItem>
             ))
           }
         </SelectContent>

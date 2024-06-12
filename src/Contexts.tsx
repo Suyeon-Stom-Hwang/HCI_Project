@@ -39,6 +39,11 @@ export type HistoryInput = {
   summary: string;
 }
 
+export type Format = {
+  formatEN: string;
+  formatKR: string;
+}
+
 export type ContextData = {
   settings: Setting[];
   currentSetting: () => Setting | null;
@@ -48,7 +53,7 @@ export type ContextData = {
   setSetting: (id: number) => Setting | null;
   removeKeyword: (idx: number, id?: number) => Setting | null;
   changeFormat: (format: string, id?: number) => Setting | null;
-  getPredfinedFormats: () => Object;
+  getPredefinedFormats: () => Format[];
   
   histories: History[];
   addHistory: (history: HistoryInput) => History | null;
@@ -68,7 +73,7 @@ const Context = createContext<ContextData>({
   setSetting: () =>  null,
   removeKeyword: () => null,
   changeFormat: () => null,
-  getPredfinedFormats: () => null,
+  getPredefinedFormats: () => [],
   histories: [],
   addHistory: () => null,
   addHistoryByText: () => null,
@@ -86,11 +91,11 @@ const defaultSetting: Setting = {
   id: 100
 };
 
-const formats = {
-  news: "뉴스",
-  fiction: "소설",
-  academicPaper: "논문"
-};
+const formats: Format[] = [
+  {formatEN: "news", formatKR: "뉴스"},
+  {formatEN: "fiction", formatKR: "소설"},
+  {formatEN: "academicPaper", formatKR: "논문"}
+];
 
 export function ContextProvider({ children }: { children: ReactNode }) {
   const [ settings, setSettings ] = useState<Setting[]>([defaultSetting]);
@@ -147,7 +152,7 @@ export function ContextProvider({ children }: { children: ReactNode }) {
     }
     return changeSetting(newSetting, id);
   }
-  const getPredfinedFormats = () => formats;
+  const getPredefinedFormats = () => formats;
 
   const addHistory = (history: HistoryInput) => {
     const newHistory = {id: generateHistoryId(), text: history.text, summary: history.summary};
@@ -178,7 +183,7 @@ export function ContextProvider({ children }: { children: ReactNode }) {
         setSetting,
         removeKeyword,
         changeFormat,
-        getPredfinedFormats,
+        getPredefinedFormats,
         histories,
         addHistory,
         addHistoryByText,
