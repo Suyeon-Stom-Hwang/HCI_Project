@@ -2,12 +2,7 @@
 import OpenAI from 'openai';
 
 const openai = new OpenAI({apiKey: import.meta.env.VITE_OPENAI_API_KEY, dangerouslyAllowBrowser: true});
-/*
-interface Message {
-  role: 'system' | 'user' | 'assistant';
-  content: string;
-}
-*/
+
 async function prompts(question: string): Promise<string>{
   try {
 
@@ -32,4 +27,39 @@ async function prompts(question: string): Promise<string>{
   return question + "Hello World!";
 }
 
+async function generateImage(prompt: string): Promise<string> {
+  
+  const maxPromptLength = 300; // Define a maximum length for the prompt
+
+  // Trim the prompt if it exceeds the maximum length
+  if (prompt.length > maxPromptLength) {
+    prompt = prompt.substring(0, maxPromptLength);
+  }
+  
+  try {
+    const response = await openai.images.generate({
+      prompt: prompt,
+      n: 1,
+      size: "256x256"
+    });
+
+    console.log('OpenAI Image Generation Response:', response);
+
+    if (!response || !response.data || response.data.length === 0) {
+      throw new Error("No image generated!");
+    }
+
+    const imageUrl = response.data[0]?.url;
+    if (!imageUrl) {
+      throw new Error("No URL found for generated image");
+    }
+
+    return imageUrl;
+  } catch (error) {
+    console.error('Error generating image with OpenAI:', error);
+    return "";
+  }
+}
+
+export { prompts, generateImage };
 export default prompts;

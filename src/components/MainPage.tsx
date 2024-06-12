@@ -9,7 +9,7 @@ import Sidebar from './Sidebar'
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import { useContexts } from '@/Contexts'
 import TranslateSetting from './api/TranslateSettings'
 import { useNavigate } from 'react-router-dom'
@@ -22,35 +22,38 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
+import { generateImage } from './api/Prompts'; // Ensure correct import path
+
 interface DictionaryPopupProps {
   word: string;
   description: string;
 }
 
 interface ParagraphBoxProps {
-  children: ReactNode
+  children: ReactNode;
+  imageUrl: string;
 }
 
 interface KeywordBlockProps {
-  children: ReactNode
-  index: number
+  children: ReactNode;
+  index: number;
 }
 
 interface FormatBlockProps {
-  format: string | undefined
+  format: string | undefined;
 }
 
-const DictionaryPopup = ({word, description}: DictionaryPopupProps) => {
-    return (
-      <div id="dictionaryPopup">
-        <div className='rightAlign'>
-          <img src={exitIcon}/>
-        </div>
-        <div className="textTitle">{word}</div>
-        <div className="textRegular">{description}</div>
+const DictionaryPopup = ({ word, description }: DictionaryPopupProps) => {
+  return (
+    <div id="dictionaryPopup">
+      <div className='rightAlign'>
+        <img src={exitIcon} />
       </div>
-    )
-  }
+      <div className="textTitle">{word}</div>
+      <div className="textRegular">{description}</div>
+    </div>
+  );
+};
 
 const CurrentSettingBlock = () => {
   const navigate = useNavigate();
@@ -64,7 +67,7 @@ const CurrentSettingBlock = () => {
       </div>
     )
   }
-  
+
   const FormatBlock = ({format}: FormatBlockProps) => {
     return (
       <Select onValueChange={(value) => changeFormat(value)} defaultValue={format} >
@@ -106,19 +109,33 @@ const CurrentSettingBlock = () => {
   )
 }
 
-function ParagraphBox({children}: ParagraphBoxProps) {
-  return (<div className='paragraphBox'>{children}</div>)
+function ParagraphBox({ children, imageUrl }: ParagraphBoxProps) {
+  return (
+    <div className='paragraphBox'>
+      {imageUrl && (
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+          <img src={imageUrl} alt="Generated" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+        </div>
+      )}
+      {children}
+    </div>
+  );
 }
 
 function MainPage() {
   const { currentSetting, addHistoryByText, mainPageText, setMainText } = useContexts();
+  const [generatedImageUrl, setGeneratedImageUrl] = useState<string>("");
 
   const handleClick = async () => {
     if(mainPageText !== "") await addHistoryByText(mainPageText);
     const newText = await TranslateSetting(currentSetting());
     setMainText(newText);
     addHistoryByText(newText);
-  }
+
+    // Generate an image based on the new text
+    const imageUrl = await generateImage(newText);
+    setGeneratedImageUrl(imageUrl || "");
+  };
 
   return (
     <>
@@ -131,46 +148,42 @@ function MainPage() {
           <CurrentSettingBlock/>
         </div>
         <div>
-          <ParagraphBox>{mainPageText}</ParagraphBox>
+          <ParagraphBox imageUrl={generatedImageUrl}>{mainPageText}</ParagraphBox>
         </div>
       </div>
 
       <div className='mainSideView sectionBorder'>
         <DictionaryPopup word='Artificial' description='1. 이건 하나의 예시'/>
 
-        <div id="evaluationCointainer" className='space-y-5'>
+        <div id="evaluationContainer" className='space-y-5'>
           <div className='space-y-3'>
             <RadioGroup defaultValue="comfortable" >
               <div className='textSubTitle'>글은 만족스러운가요?</div>
-
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="up" id="r1" />
                 <Label className='textTitle' htmlFor="r1">👍</Label>
               </div>
-
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="down" id="r2" />
                 <Label className='textTitle' htmlFor="r2">👎</Label>
               </div>
             </RadioGroup>
           </div>
-          
+
           <div className='space-y-3'>
             <RadioGroup defaultValue="comfortable" >
               <div className='textSubTitle'>글의 내용이 이해되나요?</div>
-
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="up" id="r1" />
                 <Label className='textTitle' htmlFor="r1">⭕</Label>
               </div>
-
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="down" id="r2" />
                 <Label className='textTitle' htmlFor="r2">❌</Label>
               </div>
             </RadioGroup>
           </div>
-          
+
           <div>
             <Button variant={'default'} onClick={handleClick}>새로운 글</Button>
           </div>
