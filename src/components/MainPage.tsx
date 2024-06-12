@@ -117,6 +117,7 @@ function MainPage() {
     if(mainPageText !== "") await addHistoryByText(mainPageText);
     const newText = await TranslateSetting(currentSetting());
     setMainText(newText);
+    addHistoryByText(newText);
   }
 
   return (

@@ -53,12 +53,20 @@ function SettingBlock({image, isSelected, children}: SettingBlockProps) {
 }
 
 const Sidebar = ({isSettings}: SidebarProps) => {
-  const { setSetting, currentSetting } = useContexts();
+  const { setSetting, currentSetting, getHistoryById, splayHistory, setMainText } = useContexts();
   const navigate = useNavigate();
 
   const handleSettingClick = (id: number) => () => {
     setSetting(id);
     navigate("/");
+  }
+
+  const handleHistoryClick = (id: number) => () => {
+    const history = getHistoryById(id);
+    if(history !== null) {
+      setMainText(history.text);
+      splayHistory(id);
+    }
   }
   
   let historyBlock = (<div></div>)
@@ -73,7 +81,9 @@ const Sidebar = ({isSettings}: SidebarProps) => {
           <div>
             {
               histories.map((history) => (
-                <HistoryBlock text={history.summary} index={history.id} isPositive={true} key={history.id}/>
+                <div onClick={handleHistoryClick(history.id)} key={"clickdiv-"+history.id.toString()}>
+                  <HistoryBlock text={history.summary} index={history.id} isPositive={true} key={history.id}/>
+                </div>
               ))
             }
           </div>
