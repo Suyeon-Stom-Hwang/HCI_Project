@@ -59,6 +59,7 @@ export type ContextData = {
   addHistory: (history: HistoryInput) => History | null;
   addHistoryByText: (text: string) => Promise<History> | null;
   getHistoryById: (id: number) => History | null;
+  splayHistory: (id: number) => History | null;
 
   mainPageText: string;
   setMainText: (text: string) => string | null;
@@ -78,6 +79,7 @@ const Context = createContext<ContextData>({
   addHistory: () => null,
   addHistoryByText: () => null,
   getHistoryById: () => null,
+  splayHistory: () => null,
   mainPageText: "",
   setMainText: () => null
 });
@@ -166,6 +168,12 @@ export function ContextProvider({ children }: { children: ReactNode }) {
   const getHistoryById = (id: number) => {
     return histories.find((history: History) => history.id === id) || null;
   }
+  const splayHistory = (id: number) => {
+    const topHistory = getHistoryById(id);
+    if(topHistory === null) return null;
+    setHistories([topHistory, ...histories.filter((history) => history.id !== topHistory.id)]);
+    return topHistory;
+  }
 
   const setMainText = (text: string) => {
     setMainPageText(text);
@@ -188,6 +196,7 @@ export function ContextProvider({ children }: { children: ReactNode }) {
         addHistory,
         addHistoryByText,
         getHistoryById,
+        splayHistory,
         mainPageText,
         setMainText
       }}
