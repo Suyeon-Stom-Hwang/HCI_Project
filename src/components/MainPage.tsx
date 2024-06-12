@@ -9,7 +9,7 @@ import Sidebar from './Sidebar'
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { ReactNode, useState } from 'react'
+import { ReactNode } from 'react'
 import { useContexts } from '@/Contexts'
 import TranslateSetting from './api/TranslateSettings'
 import { useNavigate } from 'react-router-dom'
@@ -111,13 +111,12 @@ function ParagraphBox({children}: ParagraphBoxProps) {
 }
 
 function MainPage() {
-  const { currentSetting, addHistoryByText } = useContexts();
-  const [ text, setText ] = useState("");
+  const { currentSetting, addHistoryByText, mainPageText, setMainText } = useContexts();
 
   const handleClick = async () => {
-    if(text !== "") await addHistoryByText(text);
+    if(mainPageText !== "") await addHistoryByText(mainPageText);
     const newText = await TranslateSetting(currentSetting());
-    setText(newText);
+    setMainText(newText);
   }
 
   return (
@@ -131,7 +130,7 @@ function MainPage() {
           <CurrentSettingBlock/>
         </div>
         <div>
-          <ParagraphBox>{text}</ParagraphBox>
+          <ParagraphBox>{mainPageText}</ParagraphBox>
         </div>
       </div>
 

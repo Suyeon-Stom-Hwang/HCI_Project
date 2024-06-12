@@ -54,6 +54,9 @@ export type ContextData = {
   addHistory: (history: HistoryInput) => History | null;
   addHistoryByText: (text: string) => Promise<History> | null;
   getHistoryById: (id: number) => History | null;
+
+  mainPageText: string;
+  setMainText: (text: string) => string | null;
 };
 
 const Context = createContext<ContextData>({
@@ -69,7 +72,9 @@ const Context = createContext<ContextData>({
   histories: [],
   addHistory: () => null,
   addHistoryByText: () => null,
-  getHistoryById: () => null
+  getHistoryById: () => null,
+  mainPageText: "",
+  setMainText: () => null
 });
 
 const defaultSetting: Setting = {
@@ -91,6 +96,7 @@ export function ContextProvider({ children }: { children: ReactNode }) {
   const [ settings, setSettings ] = useState<Setting[]>([defaultSetting]);
   const [ currentId, setCurrentId ] = useState(100);
   const [ histories, setHistories ] = useState<History[]>([]);
+  const [ mainPageText, setMainPageText ] = useState<string>("");
   const getSettingById = (id: number) => {
     return settings.find((setting: Setting) => setting.id === id) || null;
   };
@@ -156,6 +162,11 @@ export function ContextProvider({ children }: { children: ReactNode }) {
     return histories.find((history: History) => history.id === id) || null;
   }
 
+  const setMainText = (text: string) => {
+    setMainPageText(text);
+    return text;
+  }
+
   return (
     <Context.Provider
       value={{
@@ -171,7 +182,9 @@ export function ContextProvider({ children }: { children: ReactNode }) {
         histories,
         addHistory,
         addHistoryByText,
-        getHistoryById
+        getHistoryById,
+        mainPageText,
+        setMainText
       }}
     >
       {children}
