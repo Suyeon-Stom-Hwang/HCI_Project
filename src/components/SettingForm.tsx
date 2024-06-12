@@ -35,7 +35,7 @@ const formSchema = z.object({
 })
 
 export function SettingForm(props: {id: number}) {
-  const { addSetting, changeSetting, currentSetting } = useContexts();
+  const { addSetting, changeSetting, currentSetting, getPredfinedFormats } = useContexts();
   const navigate = useNavigate();
 
   const curSet = currentSetting();
@@ -125,9 +125,11 @@ export function SettingForm(props: {id: number}) {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="news">뉴스</SelectItem>
-                    <SelectItem value="fiction">소설</SelectItem>
-                    <SelectItem value="academicPaper">논문</SelectItem>
+                  {
+                    Object.entries(getPredfinedFormats()).map((entry, idx) => (
+                      <SelectItem value={entry[0]}>{entry[1]}</SelectItem>
+                    ))
+                  }
                   </SelectContent>
                 </Select>
                 <FormMessage />
