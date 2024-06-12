@@ -27,6 +27,8 @@ import { useContexts } from "@/Contexts"
 import { useNavigate } from "react-router-dom"
 import './css/SettingForm.css'
 
+const liValues = [100, 300, 500, 700, 900, 1100, 1500];
+
 const formSchema = z.object({
   settingName: z.string().min(2).max(50),
   essentialKeyword: z.string().max(50),
@@ -47,7 +49,7 @@ export function SettingForm(props: {id: number}) {
       settingName: (props.id === 0 || curSet === null)?"":curSet.name,
       essentialKeyword: (props.id === 0 || curSet === null)?"":curSet.keywords.join(", "),
       formatCategory: (props.id === 0 || curSet === null)?"news":curSet.format,
-      difficultyLevel: (props.id === 0 || curSet === null)?[50]:[curSet.li],
+      difficultyLevel: (props.id === 0 || curSet === null)?[liValues.length / 2]:[curSet.li],
     },
   })
 
@@ -55,7 +57,8 @@ export function SettingForm(props: {id: number}) {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    const settingStruct = {name: values.settingName, keywords: values.essentialKeyword.split(",").map(x => x.trim()), format: values.formatCategory, li: values.difficultyLevel[0], custom: false};
+    console.log("Value: %d, matched Index: %d", values.difficultyLevel[0], liValues[values.difficultyLevel[0]]);
+    const settingStruct = {name: values.settingName, keywords: values.essentialKeyword.split(",").map(x => x.trim()), format: values.formatCategory, li: liValues[values.difficultyLevel[0]], custom: false};
     if(props.id === 0) {
       addSetting(settingStruct);
     } else {
@@ -145,7 +148,7 @@ export function SettingForm(props: {id: number}) {
                 <FormDescription className='textSubDescription'>
                   생성되는 지문의 읽기 난이도를 설정합니다. 난이도는 Lexile measures를 통해 평가됩니다.
                 </FormDescription>
-                <Slider onValueChange={field.onChange} defaultValue={field.value} max={100} step={1} />
+                <Slider onValueChange={field.onChange} defaultValue={field.value} min={0} max={liValues.length - 1} step={1} />
                 <FormMessage />
               </FormItem>
             )}
