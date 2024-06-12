@@ -96,14 +96,41 @@ function ParagraphBox({children}: ParagraphBoxProps) {
   return (<div className='paragraphBox'>{children}</div>)
 }
 
+function extractTitleAndContent(str: string, startChar: string, endChar: string): { title: string, content: string } {
+  // Find the index of the start character
+  const startIndex = str.indexOf(startChar);
+  if (startIndex === -1) {
+    console.error(`Start character "${startChar}" not found in string.`);
+    return { title: '', content: '' }; // startChar not found
+  }
+
+  // Find the index of the end character, starting from the position after startChar
+  const endIndex = str.indexOf(endChar, startIndex + 1);
+  if (endIndex === -1) {
+    console.error(`End character "${endChar}" not found in string.`);
+    return { title: '', content: '' }; // endChar not found
+  }
+
+  // Extract the substring between startChar and endChar
+  const title = str.slice(startIndex, endIndex+1);
+
+  // Extract the substring after endChar
+  const content = str.slice(endIndex + 1);
+
+  return { title, content };
+}
+
 function MainPage() {
   const { currentSetting, addHistoryByText } = useContexts();
-  const [ text, setText ] = useState("");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
   const handleClick = async () => {
-    if(text !== "") await addHistoryByText(text);
+    if (title !== "" || content !== "") await addHistoryByText(`${title} ${content}`);
     const newText = await TranslateSetting(currentSetting());
-    setText(newText);
+    let genText = extractTitleAndContent(newText, '<', '>');
+    setTitle(genText['title']); // Set the title part
+    setContent(genText['content']); // Set the content part
   }
 
   return (
@@ -117,7 +144,11 @@ function MainPage() {
           <CurrentSettingBlock/>
         </div>
         <div>
-          <ParagraphBox>{text}</ParagraphBox>
+          <ParagraphBox>
+            <span className="highlight">{title}</span>
+            <br /> {/* This adds a line break after the title */}
+            <span>{content}</span>
+          </ParagraphBox>
         </div>
       </div>
 

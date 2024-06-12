@@ -116,3 +116,9 @@
 .rightAlign {
   float: right;
 }
+
+.highlight {
+  font-weight: bold;
+  padding: 0.2em;
+  font-size: 1.5em;
+}
