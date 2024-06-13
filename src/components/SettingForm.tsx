@@ -49,7 +49,7 @@ export function SettingForm(props: {id: number}) {
       settingName: (props.id === 0 || curSet === null)?"":curSet.name,
       essentialKeyword: (props.id === 0 || curSet === null)?"":curSet.keywords.join(", "),
       formatCategory: (props.id === 0 || curSet === null)?"news":curSet.format,
-      difficultyLevel: (props.id === 0 || curSet === null)?[liValues.length / 2]:[curSet.li],
+      difficultyLevel: (props.id === 0 || curSet === null)?[liValues.length / 2]:[liValues.indexOf(curSet.li)],
     },
   })
 
