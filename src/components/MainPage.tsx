@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface DictionaryPopupProps {
   word: string;
@@ -131,7 +132,9 @@ function MainPage() {
           <CurrentSettingBlock/>
         </div>
         <div>
-          <ParagraphBox>{mainPageText}</ParagraphBox>
+          <ScrollArea className="h-[777px] w-[783px]">
+            <ParagraphBox>{mainPageText}</ParagraphBox>
+          </ScrollArea>
         </div>
       </div>
 
