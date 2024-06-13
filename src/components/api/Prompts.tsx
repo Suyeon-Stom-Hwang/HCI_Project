@@ -24,7 +24,6 @@ async function prompts(question: string): Promise<string>{
 
     return "";
   }
-  return question + "Hello World!";
 }
 
 async function generateImage(prompt: string): Promise<string> {
