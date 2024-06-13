@@ -64,7 +64,7 @@ const Sidebar = ({isSettings}: SidebarProps) => {
   const handleHistoryClick = (id: number) => () => {
     const history = getHistoryById(id);
     if(history !== null) {
-      setMainText(history.text);
+      setMainText(history.page.image, history.page.text);
       splayHistory(id);
     }
   }

@@ -9,7 +9,7 @@ import Sidebar from './Sidebar'
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { ReactNode, useState } from 'react'
+import { ReactNode } from 'react'
 import { useContexts } from '@/Contexts'
 import TranslateSetting from './api/TranslateSettings'
 import { useNavigate } from 'react-router-dom'
@@ -123,18 +123,15 @@ function ParagraphBox({ children, imageUrl }: ParagraphBoxProps) {
 }
 
 function MainPage() {
-  const { currentSetting, addHistoryByText, mainPageText, setMainText } = useContexts();
-  const [generatedImageUrl, setGeneratedImageUrl] = useState<string>("");
+  const { currentSetting, addHistoryByPage, mainPageText, setMainText } = useContexts();
 
   const handleClick = async () => {
-    if(mainPageText !== "") await addHistoryByText(mainPageText);
     const newText = await TranslateSetting(currentSetting());
-    setMainText(newText);
-    addHistoryByText(newText);
 
     // Generate an image based on the new text
     const imageUrl = await generateImage(newText);
-    setGeneratedImageUrl(imageUrl || "");
+    setMainText(imageUrl, newText);
+    addHistoryByPage({image: imageUrl, text: newText});
   };
 
   return (
@@ -148,7 +145,7 @@ function MainPage() {
           <CurrentSettingBlock/>
         </div>
         <div>
-          <ParagraphBox imageUrl={generatedImageUrl}>{mainPageText}</ParagraphBox>
+          <ParagraphBox imageUrl={mainPageText.image}>{mainPageText.text}</ParagraphBox>
         </div>
       </div>
 

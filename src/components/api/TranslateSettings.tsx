@@ -1,5 +1,5 @@
 import { Setting } from "../../Contexts";
-import prompts from "./Prompts";
+import { prompts } from "./Prompts";
 
 function TranslateSetting(setting: Setting | null) {
 

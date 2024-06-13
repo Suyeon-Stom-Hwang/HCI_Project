@@ -62,4 +62,3 @@ async function generateImage(prompt: string): Promise<string> {
 }
 
 export { prompts, generateImage };
-export default prompts;

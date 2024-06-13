@@ -28,14 +28,19 @@ export type SettingInput = {
   custom: boolean;
 };
 
-export type History = {
+export type MainPage = {
+  image: string;
   text: string;
+}
+
+export type History = {
+  page: MainPage;
   summary: string;
   id: number;
 }
 
 export type HistoryInput = {
-  text: string;
+  page: MainPage;
   summary: string;
 }
 
@@ -57,12 +62,12 @@ export type ContextData = {
   
   histories: History[];
   addHistory: (history: HistoryInput) => History | null;
-  addHistoryByText: (text: string) => Promise<History> | null;
+  addHistoryByPage: (page: MainPage) => Promise<History> | null;
   getHistoryById: (id: number) => History | null;
   splayHistory: (id: number) => History | null;
 
-  mainPageText: string;
-  setMainText: (text: string) => string | null;
+  mainPageText: MainPage;
+  setMainText: (image: string, text: string) => MainPage | null;
 };
 
 const Context = createContext<ContextData>({
@@ -77,10 +82,10 @@ const Context = createContext<ContextData>({
   getPredefinedFormats: () => [],
   histories: [],
   addHistory: () => null,
-  addHistoryByText: () => null,
+  addHistoryByPage: () => null,
   getHistoryById: () => null,
   splayHistory: () => null,
-  mainPageText: "",
+  mainPageText: {image: "", text: ""},
   setMainText: () => null
 });
 
@@ -103,7 +108,7 @@ export function ContextProvider({ children }: { children: ReactNode }) {
   const [ settings, setSettings ] = useState<Setting[]>([defaultSetting]);
   const [ currentId, setCurrentId ] = useState(100);
   const [ histories, setHistories ] = useState<History[]>([]);
-  const [ mainPageText, setMainPageText ] = useState<string>("");
+  const [ mainPageText, setMainPageText ] = useState<MainPage>({image: "", text: ""});
   const getSettingById = (id: number) => {
     return settings.find((setting: Setting) => setting.id === id) || null;
   };
@@ -157,13 +162,13 @@ export function ContextProvider({ children }: { children: ReactNode }) {
   const getPredefinedFormats = () => formats;
 
   const addHistory = (history: HistoryInput) => {
-    const newHistory = {id: generateHistoryId(), text: history.text, summary: history.summary};
+    const newHistory = {id: generateHistoryId(), page: history.page, summary: history.summary};
     setHistories([newHistory, ...histories]);
     return newHistory;
   }
-  const addHistoryByText = async (text: string) => {
-    const summary = await generateSummary(text);
-    return addHistory({text: text, summary: summary});
+  const addHistoryByPage = async (page: MainPage) => {
+    const summary = await generateSummary(page.text);
+    return addHistory({page: page, summary: summary});
   }
   const getHistoryById = (id: number) => {
     return histories.find((history: History) => history.id === id) || null;
@@ -175,9 +180,10 @@ export function ContextProvider({ children }: { children: ReactNode }) {
     return topHistory;
   }
 
-  const setMainText = (text: string) => {
-    setMainPageText(text);
-    return text;
+  const setMainText = (image: string, text: string) => {
+    const newPage = {image: image, text: text};
+    setMainPageText(newPage);
+    return newPage;
   }
 
   return (
@@ -194,7 +200,7 @@ export function ContextProvider({ children }: { children: ReactNode }) {
         getPredefinedFormats,
         histories,
         addHistory,
-        addHistoryByText,
+        addHistoryByPage,
         getHistoryById,
         splayHistory,
         mainPageText,
