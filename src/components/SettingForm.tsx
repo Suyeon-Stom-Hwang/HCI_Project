@@ -49,7 +49,7 @@ export function SettingForm(props: {id: number}) {
       settingName: (props.id === 0 || curSet === null)?"":curSet.name,
       essentialKeyword: (props.id === 0 || curSet === null)?"":curSet.keywords.join(", "),
       formatCategory: (props.id === 0 || curSet === null)?"news":curSet.format,
-      difficultyLevel: (props.id === 0 || curSet === null)?[Math.floor(liValues.length / 2)]:[curSet.li],
+      difficultyLevel: (props.id === 0 || curSet === null)?[Math.floor(liValues.length / 2)]:[liValues.indexOf(curSet.li)],
     },
   })
 
@@ -57,7 +57,6 @@ export function SettingForm(props: {id: number}) {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log("Value: %d, matched Index: %d", values.difficultyLevel[0], liValues[values.difficultyLevel[0]]);
     const settingStruct = {name: values.settingName, keywords: values.essentialKeyword.split(",").map(x => x.trim()), format: values.formatCategory, li: liValues[values.difficultyLevel[0]], custom: false};
     if(props.id === 0) {
       addSetting(settingStruct);
