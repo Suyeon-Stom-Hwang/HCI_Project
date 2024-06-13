@@ -70,14 +70,15 @@ const Sidebar = ({isSettings}: SidebarProps) => {
   }
   
   let historyBlock = (<div></div>)
-  let blockHeight = '800px'
+  let blockHeight = '832px'
   const { settings, histories } = useContexts();
 
   if (isSettings == false) {
+    blockHeight = '400px'
     historyBlock = (
       <div>
         <div className='sideBarTitle textViewTitle'>History</div>
-        <ScrollArea className="h-[320px] w-[400px] p-[20px]">
+        <ScrollArea className="h-[432px] w-[400px] p-[20px]">
           <div>
             {
               histories.map((history) => (
@@ -90,7 +91,6 @@ const Sidebar = ({isSettings}: SidebarProps) => {
         </ScrollArea>
       </div>
     )
-    blockHeight = '400px'
   }
 
   const selectedSetting = currentSetting();
@@ -100,22 +100,24 @@ const Sidebar = ({isSettings}: SidebarProps) => {
     <>
       <div className='sectionBorderOnlyBottom'>
         <div className='sideBarTitle textViewTitle'>Setting</div>
-        <ScrollArea className={"h-[" + blockHeight + "] w-[400px]"}>
-          {
-            settings.map((setting) => {
-              const isSelected = (selectedSetting?.id === setting.id);
-
-              return (
-              <div onClick={handleSettingClick(setting.id)} key={"clickdiv-"+setting.name}>
-                <SettingBlock isSelected={!isNewSettingSelected && isSelected} image="">{setting.name}</SettingBlock>
-              </div>
-              )
-            })
-          }
+        {
+          <ScrollArea className={"h-[" + blockHeight + "] w-[400px]"}>
           <Link to={"/settings/0"}>
             <SettingBlock isSelected={isNewSettingSelected} image={newSetting}>Add new setting</SettingBlock>
           </Link>
-        </ScrollArea>
+            {
+              settings.map((setting) => {
+                const isSelected = (selectedSetting?.id === setting.id);
+
+                return (
+                <div onClick={handleSettingClick(setting.id)} key={"clickdiv-"+setting.name}>
+                  <SettingBlock isSelected={!isNewSettingSelected && isSelected} image="">{setting.name}</SettingBlock>
+                </div>
+                )
+              })
+            }
+          </ScrollArea>
+        }
       </div>
       {historyBlock}
     </>
