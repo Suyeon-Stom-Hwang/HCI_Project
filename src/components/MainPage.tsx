@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 import { generateImage } from './api/Prompts'; // Ensure correct import path
 
@@ -145,7 +146,9 @@ function MainPage() {
           <CurrentSettingBlock/>
         </div>
         <div>
-          <ParagraphBox imageUrl={mainPageText.image}>{mainPageText.text}</ParagraphBox>
+          <ScrollArea className="h-[777px] w-[783px]">
+            <ParagraphBox imageUrl={mainPageText.image}>{mainPageText.text}</ParagraphBox>
+          </ScrollArea>
         </div>
       </div>
 
