@@ -8,13 +8,13 @@ interface Message {
   content: string;
 }
 */
-async function prompts(question: string): Promise<string>{
+async function prompts(question: string, role?: string): Promise<string>{
   try {
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o',
       messages: [
-        { role: 'system', content: 'You are a text generator which for English learner. Do not answer my question. Just generate reading text and use only English.' },
+        { role: 'system', content: role ? role : 'You are a text generator which for English learner. Do not answer my question. Just generate reading text and use only English.' },
         { role: 'user', content: question }],
       max_tokens: 4095
     });
@@ -29,7 +29,6 @@ async function prompts(question: string): Promise<string>{
 
     return "";
   }
-  return question + "Hello World!";
 }
 
 export default prompts;

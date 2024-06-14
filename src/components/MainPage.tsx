@@ -9,7 +9,7 @@ import Sidebar from './Sidebar'
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import { useContexts } from '@/Contexts'
 import TranslateSetting from './api/TranslateSettings'
 import { useNavigate } from 'react-router-dom'
@@ -22,10 +22,11 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import dictionaryCall from './api/DictionaryCall'
 
 interface DictionaryPopupProps {
   word: string;
-  description: string;
+  description: string[];
 }
 
 interface ParagraphBoxProps {
@@ -41,6 +42,11 @@ interface FormatBlockProps {
   format: string | undefined
 }
 
+export type DictionaryItem = {
+  word: string;
+  description: string[];
+}
+
 const DictionaryPopup = ({word, description}: DictionaryPopupProps) => {
     return (
       <div id="dictionaryPopup">
@@ -48,7 +54,9 @@ const DictionaryPopup = ({word, description}: DictionaryPopupProps) => {
           <img src={exitIcon}/>
         </div>
         <div className="textTitle">{word}</div>
-        <div className="textRegular">{description}</div>
+        {
+          description.map((comp, ix) => (<div className="textRegular" key={"description-"+ix.toString()}>{comp}</div>))
+        }
       </div>
     )
   }
@@ -112,13 +120,24 @@ function ParagraphBox({children}: ParagraphBoxProps) {
 }
 
 function MainPage() {
-  const { currentSetting, addHistoryByText, mainPageText, setMainText } = useContexts();
+  const { currentSetting, addHistoryByPage, mainPageText, setMainText } = useContexts();
+  const [ isDictionaryVisible, setIsDictionaryVisible ] = useState(false);
+  const [ dictionaryItem, setDictionaryItem ] = useState<DictionaryItem>({word: "", description: []});
 
   const handleClick = async () => {
-    if(mainPageText !== "") await addHistoryByText(mainPageText);
+    const previousPage = mainPageText;
+    setMainText({title: "로딩중...", sentences: []});
+    if(previousPage.sentences.length !== 0) addHistoryByPage(previousPage);
     const newText = await TranslateSetting(currentSetting());
-    setMainText(newText);
-    addHistoryByText(newText);
+    setMainText(newText === "" ? {title: "생성 중 오류가 발생했습니다. 다시 시도해 주세요.", sentences: []} : newText);
+    if(newText !== "") addHistoryByPage(newText);
+  }
+
+  const callDictionary = (word: string) => async () => {
+    setDictionaryItem({word: "로딩중...", description: []});
+    setIsDictionaryVisible(true);
+    const result = await dictionaryCall(word);
+    setDictionaryItem(result);
   }
 
   return (
@@ -133,13 +152,16 @@ function MainPage() {
         </div>
         <div>
           <ScrollArea className="h-[777px] w-[783px]">
-            <ParagraphBox>{mainPageText}</ParagraphBox>
+            <ParagraphBox>
+              <span className="highlight">{mainPageText.title}</span><br/>
+              {mainPageText.sentences.map((sentence, is) => sentence.map((word, iw) => <span onClick={callDictionary(word)} key={word+is.toString()+"-"+iw.toString()}>{word + ((iw === sentence.length - 1 && is !== mainPageText.sentences.length - 1) ? ". " : " ")}</span>))}
+            </ParagraphBox>
           </ScrollArea>
         </div>
       </div>
 
       <div className='mainSideView sectionBorder'>
-        <DictionaryPopup word='Artificial' description='1. 이건 하나의 예시'/>
+        {isDictionaryVisible && <DictionaryPopup word={dictionaryItem.word} description={dictionaryItem.description}/>}
 
         <div id="evaluationCointainer" className='space-y-5'>
           <div className='space-y-3'>

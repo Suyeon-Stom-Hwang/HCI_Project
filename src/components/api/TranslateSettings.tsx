@@ -1,7 +1,8 @@
 import { Setting } from "../../Contexts";
+import { parse } from "./Parse";
 import prompts from "./Prompts";
 
-function TranslateSetting(setting: Setting | null) {
+async function TranslateSetting(setting: Setting | null) {
 
   let word_num: number;
 
@@ -35,9 +36,10 @@ function TranslateSetting(setting: Setting | null) {
       word_num = 500;
   }
 
-  const prompt = "Generate a "+ word_num + "-word " + setting.format + "which has lexile level " + setting.li.toString() + "and title flanked by <>. The text should contain the following words in English: " + setting.keywords.join(", ") + "."
+  const prompt = "Generate a "+ word_num + "-word " + setting.format + "which has lexile level " + setting.li.toString() + "and title flanked by < and >. The text should contain the following words in English: " + setting.keywords.join(", ") + "."
 
-  return prompts(prompt);
+  const prompt_result = await prompts(prompt);
+  return parse(prompt_result);
 }
 
 export default TranslateSetting;
