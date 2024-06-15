@@ -114,6 +114,18 @@
   border-color: #e0e0e0;
 }
 
+.partOfSpeech {
+  width: fit-content;
+  color: cadetblue;
+  font-size: 12px;
+  padding: 2px 4px 2px 4px;
+  margin-right: 4px;
+  border-width: 1px;
+  border-radius: 10px;
+  border-color: cadetblue;
+  float: left;
+}
+
 #formatBlock {
   height: 34px;
   padding: 4px 10px 4px 10px;
@@ -124,4 +136,10 @@
 
 .rightAlign {
   float: right;
+}
+.leftAlign {
+  float: left;
+}
+.marginBottom4px {
+  margin-bottom: 4px;
 }

@@ -68,9 +68,17 @@ const DictionaryPopup = ({word, description}: DictionaryPopupProps) => {
         <div className='rightAlign'>
           <img src={exitIcon}/>
         </div>
-        <div className="textTitle">{word}</div>
+        <div className="textTitle marginBottom4px">{word}</div>
         {
-          description.map((comp, ix) => (<div className="textRegular" key={"description-"+ix.toString()}>{comp}</div>))
+          description.map((comp, ix) => {
+            let className = "textRegular leftAlign";
+            if (ix === 0) {
+              className = "partOfSpeech marginBottom4px";
+            } else if (ix === 1) {
+              className = "textSubTitle leftAlign marginBottom4px";
+            }
+            return (<div className={className} key={"description-"+ix.toString()}>{comp}</div>)
+          })
         }
       </div>
     )
