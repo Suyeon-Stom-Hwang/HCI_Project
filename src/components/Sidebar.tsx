@@ -20,15 +20,13 @@ interface SidebarProps {
 interface HistoryBlockProps {
   index: number;
   text: string;
-  isPositive: boolean;
+  isSelected: boolean;
 }
 
-function HistoryBlock({index, text, isPositive=true}: HistoryBlockProps) {
+function HistoryBlock({index, text, isSelected=true}: HistoryBlockProps) {
   let className = 'historyBlock';
-  if (isPositive) {
-    className += ' historyBlockPositive'; 
-  } else {
-    className += ' historyBlockNegative'; 
+  if (isSelected) {
+    className += ' historyBlockSelected'; 
   }
 
   return (
@@ -53,7 +51,7 @@ function SettingBlock({image, isSelected, children}: SettingBlockProps) {
 }
 
 const Sidebar = ({isSettings}: SidebarProps) => {
-  const { setSetting, currentSetting, getHistoryById, setMainText } = useContexts();
+  const { setSetting, currentSetting, getHistoryById, setMainText, setTextId, currentTextId } = useContexts();
   const navigate = useNavigate();
 
   const handleSettingClick = (id: number) => () => {
@@ -64,7 +62,8 @@ const Sidebar = ({isSettings}: SidebarProps) => {
   const handleHistoryClick = (id: number) => () => {
     const history = getHistoryById(id);
     if(history !== null) {
-      setMainText({title: history.title, sentences: history.text});
+      setMainText(history.page);
+      setTextId(id);
     }
   }
   
@@ -80,11 +79,13 @@ const Sidebar = ({isSettings}: SidebarProps) => {
         <ScrollArea className="h-[432px] w-[400px] p-[20px]">
           <div>
             {
-              histories.map((history) => (
-                <div onClick={handleHistoryClick(history.id)} key={"clickdiv-"+history.id.toString()}>
-                  <HistoryBlock text={history.title.replace("<", "").replace(">", "")} index={history.id} isPositive={true} key={history.id}/>
-                </div>
-              ))
+              histories.map((history) => {
+                const isSelected = history.id === currentTextId;
+                
+                return (<div onClick={handleHistoryClick(history.id)} key={"clickdiv-"+history.id.toString()}>
+                  <HistoryBlock text={history.page.title.replace("<", "").replace(">", "")} index={history.id} isSelected={isSelected} key={history.id}/>
+                </div>);
+              })
             }
           </div>
         </ScrollArea>

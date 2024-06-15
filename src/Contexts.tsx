@@ -35,20 +35,14 @@ export type SettingInput = {
   custom: boolean;
 };
 
-export type History = {
-  text: string[][];
-  title: string;
-  id: number;
-}
-
-export type HistoryInput = {
-  text: string[][];
-  title: string;
-}
-
 export type Format = {
   formatEN: string;
   formatKR: string;
+}
+
+export type History = {
+  id: number;
+  page: Parsed;
 }
 
 export type ContextData = {
@@ -63,12 +57,13 @@ export type ContextData = {
   getPredefinedFormats: () => Format[];
   
   histories: History[];
-  addHistory: (history: HistoryInput) => History | null;
-  addHistoryByPage: (page: Parsed) => History | null;
+  addHistory: (history: Parsed) => History | null;
   getHistoryById: (id: number) => History | null;
 
   mainPageText: Parsed;
   setMainText: (page: Parsed) => Parsed | null;
+  currentTextId: number;
+  setTextId: (id: number) => number;
 };
 
 const Context = createContext<ContextData>({
@@ -83,10 +78,11 @@ const Context = createContext<ContextData>({
   getPredefinedFormats: () => [],
   histories: [],
   addHistory: () => null,
-  addHistoryByPage: () => null,
   getHistoryById: () => null,
   mainPageText: {title: "", sentences: []},
-  setMainText: () => null
+  setMainText: () => null,
+  currentTextId: 0,
+  setTextId: () => 0
 });
 
 const defaultSetting: Setting = {
@@ -121,6 +117,8 @@ export function ContextProvider({ children }: { children: ReactNode }) {
   const [ currentId, setCurrentId ] = useState(100);
   const [ histories, setHistories ] = useState<History[]>([]);
   const [ mainPageText, setMainPageText ] = useState<Parsed>({title: "", sentences: []});
+  const [ currentTextId, setCurrentTextId ] = useState(0);
+
   const getSettingById = (id: number) => {
     return settings.find((setting: Setting) => setting.id === id) || null;
   };
@@ -182,13 +180,10 @@ export function ContextProvider({ children }: { children: ReactNode }) {
   }
   const getPredefinedFormats = () => formats;
 
-  const addHistory = (history: HistoryInput) => {
-    const newHistory = {id: generateHistoryId(), text: history.text, title: history.title};
+  const addHistory = (page: Parsed) => {
+    const newHistory = {id: generateHistoryId(), page: page};
     setHistories([newHistory, ...histories]);
     return newHistory;
-  }
-  const addHistoryByPage = (page: Parsed) => {
-    return addHistory({text: page.sentences, title: page.title});
   }
   const getHistoryById = (id: number) => {
     return histories.find((history: History) => history.id === id) || null;
@@ -197,6 +192,11 @@ export function ContextProvider({ children }: { children: ReactNode }) {
   const setMainText = (page: Parsed) => {
     setMainPageText(page);
     return page;
+  }
+
+  const setTextId = (id: number) => {
+    setCurrentTextId(id);
+    return id;
   }
 
   return (
@@ -213,10 +213,11 @@ export function ContextProvider({ children }: { children: ReactNode }) {
         getPredefinedFormats,
         histories,
         addHistory,
-        addHistoryByPage,
         getHistoryById,
         mainPageText,
-        setMainText
+        setMainText,
+        currentTextId,
+        setTextId
       }}
     >
       {children}
