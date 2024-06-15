@@ -183,7 +183,6 @@ function MainPage() {
           <div className='space-y-3'>
             <RadioGroup defaultValue="comfortable" >
               <div className='textSubTitle'>글의 내용이 이해되나요?</div>
-
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="up" id="r1" />
                 <Label className='textTitle' htmlFor="r1">⭕</Label>
