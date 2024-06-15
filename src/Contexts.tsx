@@ -56,7 +56,7 @@ export type ContextData = {
   currentSetting: () => Setting | null;
   getSettingById: (id: number) => Setting | null;
   addSetting: (setting: SettingInput) => Promise<Setting | null> | null;
-  changeSetting: (setting: SettingInput, id: number) => Promise<Setting | null> | null;
+  changeSetting: (setting: SettingInput, id: number, additional_keywords?: HiddenKeyword[]) => Promise<Setting | null> | null;
   setSetting: (id: number) => Setting | null;
   removeKeyword: (idx: number, id?: number) => Promise<Setting | null> | null;
   changeFormat: (format: string, id?: number) => Promise<Setting | null> | null;
@@ -132,11 +132,16 @@ export function ContextProvider({ children }: { children: ReactNode }) {
     setCurrentId(newSetting.id);
     return newSetting;
   };
-  const changeSetting = async (setting: SettingInput, id: number) => {
+  const changeSetting = async (setting: SettingInput, id: number, additional_keywords?: HiddenKeyword[]) => {
     if(!getSettingById(id)) return null;
-    const hk = await keywordGen(setting.keywords);
-    const hkg = hk.map((key) => {return {keyword: key, score: 0}});
-    const newSetting = {id: id, name: setting.name, keywords: setting.keywords, additional_keywords: hkg, format: setting.format, li: setting.li, custom: setting.custom};
+    let newSetting: Setting;
+    if(additional_keywords){
+      newSetting = {id: id, name: setting.name, keywords: setting.keywords, additional_keywords: additional_keywords, format: setting.format, li: setting.li, custom: setting.custom};
+    } else {
+      const hk = await keywordGen(setting.keywords);
+      const hkg = hk.map((key) => {return {keyword: key, score: 0}});
+      newSetting = {id: id, name: setting.name, keywords: setting.keywords, additional_keywords: hkg, format: setting.format, li: setting.li, custom: setting.custom};
+    }
     setSettings([newSetting, ...settings.filter((setting) => setting.id !== id)]);
     setCurrentId(id);
     return newSetting;

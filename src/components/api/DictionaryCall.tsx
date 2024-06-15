@@ -17,7 +17,6 @@ const dictionaryCall = async (word: string): Promise<DictionaryItem> => {
   const result = await prompts(word + example, "You are a helpful assistant.");
   const ix = result.indexOf(word);
   const description_slices = result.slice(ix + word.length).trim().split("!");
-  console.log(description_slices);
   return {word: word, description: [description_slices[0].trim(), description_slices[1].trim(), description_slices.slice(2).join(" ")]};
 }
 

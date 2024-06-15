@@ -37,6 +37,7 @@ async function TranslateSetting(setting: Setting | null) {
     default:
       word_num = 500;
   }
+  console.log(random_keywords);
 
   const prompt = "Generate a "+ word_num + "-word " + setting.format + "which has lexile level " + setting.li.toString() + "and title flanked by < and >. The text should contain the following words in English: " + setting.keywords.join(", ") + ", " + random_keywords.join(", ") + "."
 

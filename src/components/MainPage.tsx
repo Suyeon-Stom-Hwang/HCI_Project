@@ -33,6 +33,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import dictionaryCall from './api/DictionaryCall'
+import keywordGen from './api/KeywordGen'
 
 interface DictionaryPopupProps {
   word: string;
@@ -135,7 +136,7 @@ function ParagraphBox({children}: ParagraphBoxProps) {
 }
 
 function MainPage() {
-  const { currentSetting, addHistoryByPage, mainPageText, setMainText } = useContexts();
+  const { currentSetting, changeSetting, addHistoryByPage, mainPageText, setMainText } = useContexts();
   const [ isDictionaryVisible, setIsDictionaryVisible ] = useState(false);
   const [ dictionaryItem, setDictionaryItem ] = useState<DictionaryItem>({word: "", description: []});
 
@@ -163,8 +164,29 @@ function MainPage() {
     setDictionaryItem(result);
   }
     
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values)
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const deltaLi = (values.isUnderstandable === "up" ? 20 : -20);
+    const deltaScore = (values.isSatisfied === "up" ? 1 : -1);
+    const curSet = currentSetting();
+    if(curSet === null) return;
+    const hkg = curSet.additional_keywords.map((hk) => {return {keyword: hk.keyword, score: hk.score + deltaScore}});
+    const probs = hkg.map((hk) => 1 / (1 + Math.exp(hk.score))) // Sigmoid function for normalizing scores
+    const tot = probs.reduce((sum, current) => sum + current, 0);
+    let rtot = Math.random() * tot;
+    let badkeyIndex = -1;
+    for (let i = 0; i < probs.length; i++) {
+      rtot -= probs[i];
+      if (rtot < 0) {
+        badkeyIndex = i;
+        break;
+      }
+    }
+    if (badkeyIndex === -1) badkeyIndex = probs.length - 1;
+    const newkey = await keywordGen(curSet.keywords.concat(hkg.filter((_, ix) => ix !== badkeyIndex).map((hk) => hk.keyword)), true, hkg[badkeyIndex].keyword);
+    await changeSetting(
+      {name: curSet.name, keywords: curSet.keywords, format: curSet.format, li: curSet.li + deltaLi, custom: curSet.custom},
+      curSet.id, hkg.filter((_, ix) => ix !== badkeyIndex).concat([{keyword: newkey[0], score: 0}])
+    );
     handleClick();
   }
 
@@ -269,3 +291,4 @@ function MainPage() {
 }
 
 export default MainPage
+
