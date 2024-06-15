@@ -179,18 +179,19 @@ function MainPage() {
           <CurrentSettingBlock/>
         </div>
         <div>
-          <ScrollArea className="h-[777px] w-[783px]">
+          <ScrollArea className="h-[740px] w-[783px]">
             <ParagraphBox>
               <span className="highlight">{mainPageText.title}</span><br/>
               {mainPageText.sentences.map((sentence, is) => sentence.map((word, iw) => <span onClick={callDictionary(word)} key={word+is.toString()+"-"+iw.toString()}>{word + ((iw === sentence.length - 1 && is !== mainPageText.sentences.length - 1) ? ". " : " ")}</span>))}
             </ParagraphBox>
           </ScrollArea>
+          <div className='warnText'>
+            ❗위의 글은 실제 사실과 다를 수 있으니 주의 바랍니다.
+          </div>
         </div>
       </div>
 
       <div className='mainSideView sectionBorder'>
-        {isDictionaryVisible && <DictionaryPopup word={dictionaryItem.word} description={dictionaryItem.description}/>}
-
         <div id="evaluationCointainer" className='space-y-5'>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -263,6 +264,7 @@ function MainPage() {
             </form>
           </Form>
         </div>
+        {isDictionaryVisible && <DictionaryPopup word={dictionaryItem.word} description={dictionaryItem.description}/>}
       </div>
     </>
   )

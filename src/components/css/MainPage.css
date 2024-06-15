@@ -30,7 +30,6 @@
 
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
 .paragraphBox {
@@ -83,6 +82,16 @@
   font-size: 16px;
   font-weight: bold;
   color: #ffffff;
+}
+
+.warnText {
+  width: 784px;
+  height: 37px;
+  line-height: 37px;
+  color: sienna;
+  padding-right: 20px;
+  text-align: right;
+  font-size: 14px;
 }
 
 .currentKeywords {
