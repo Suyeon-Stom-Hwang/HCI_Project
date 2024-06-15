@@ -144,7 +144,7 @@ function ParagraphBox({children}: ParagraphBoxProps) {
 }
 
 function MainPage() {
-  const { currentSetting, changeSetting, addHistoryByPage, mainPageText, setMainText } = useContexts();
+  const { currentSetting, changeSetting, addHistory, mainPageText, setMainText, setTextId } = useContexts();
   const [ isDictionaryVisible, setIsDictionaryVisible ] = useState(false);
   const [ dictionaryItem, setDictionaryItem ] = useState<DictionaryItem>({word: "", description: []});
 
@@ -157,12 +157,13 @@ function MainPage() {
   })
   
   const handleClick = async () => {
-    const previousPage = mainPageText;
     setMainText({title: "로딩중...", sentences: []});
-    if(previousPage.sentences.length !== 0) addHistoryByPage(previousPage);
     const newText = await TranslateSetting(currentSetting());
     setMainText(newText === "" ? {title: "생성 중 오류가 발생했습니다. 다시 시도해 주세요.", sentences: []} : newText);
-    if(newText !== "") addHistoryByPage(newText);
+    if(newText !== ""){
+      const thisPage = addHistory(newText);
+      if (thisPage !== null) setTextId(thisPage.id);
+    }
   }
 
   const callDictionary = (word: string) => async () => {

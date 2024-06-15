@@ -51,7 +51,7 @@ function SettingBlock({image, isSelected, children}: SettingBlockProps) {
 }
 
 const Sidebar = ({isSettings}: SidebarProps) => {
-  const { setSetting, currentSetting, getHistoryById, setMainText } = useContexts();
+  const { setSetting, currentSetting, getHistoryById, setMainText, setTextId, currentTextId } = useContexts();
   const navigate = useNavigate();
 
   const handleSettingClick = (id: number) => () => {
@@ -62,7 +62,8 @@ const Sidebar = ({isSettings}: SidebarProps) => {
   const handleHistoryClick = (id: number) => () => {
     const history = getHistoryById(id);
     if(history !== null) {
-      setMainText({title: history.title, sentences: history.text});
+      setMainText(history.page);
+      setTextId(id);
     }
   }
   
@@ -79,10 +80,10 @@ const Sidebar = ({isSettings}: SidebarProps) => {
           <div>
             {
               histories.map((history) => {
-                const isSelected = false;
+                const isSelected = history.id === currentTextId;
                 
                 return (<div onClick={handleHistoryClick(history.id)} key={"clickdiv-"+history.id.toString()}>
-                  <HistoryBlock text={history.title.replace("<", "").replace(">", "")} index={history.id} isSelected={isSelected} key={history.id}/>
+                  <HistoryBlock text={history.page.title.replace("<", "").replace(">", "")} index={history.id} isSelected={isSelected} key={history.id}/>
                 </div>);
               })
             }
