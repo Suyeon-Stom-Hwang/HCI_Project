@@ -7,7 +7,6 @@ import exitIcon from '../assets/exitIcon.svg'
 
 import Sidebar from './Sidebar'
 import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { ReactNode, useState } from 'react'
 import { useContexts } from '@/Contexts'
@@ -21,6 +20,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { z } from "zod"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import dictionaryCall from './api/DictionaryCall'
 
@@ -46,6 +56,11 @@ export type DictionaryItem = {
   word: string;
   description: string[];
 }
+
+const formSchema = z.object({
+  isSatisfied: z.string(),
+  isUnderstandable: z.string(),
+})
 
 const DictionaryPopup = ({word, description}: DictionaryPopupProps) => {
     return (
@@ -124,6 +139,14 @@ function MainPage() {
   const [ isDictionaryVisible, setIsDictionaryVisible ] = useState(false);
   const [ dictionaryItem, setDictionaryItem ] = useState<DictionaryItem>({word: "", description: []});
 
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      isSatisfied: "",
+      isUnderstandable: "",
+    },
+  })
+  
   const handleClick = async () => {
     const previousPage = mainPageText;
     setMainText({title: "로딩중...", sentences: []});
@@ -138,6 +161,11 @@ function MainPage() {
     setIsDictionaryVisible(true);
     const result = await dictionaryCall(word);
     setDictionaryItem(result);
+  }
+    
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    console.log(values)
+    handleClick();
   }
 
   return (
@@ -164,41 +192,76 @@ function MainPage() {
         {isDictionaryVisible && <DictionaryPopup word={dictionaryItem.word} description={dictionaryItem.description}/>}
 
         <div id="evaluationCointainer" className='space-y-5'>
-          <div className='space-y-3'>
-            <RadioGroup defaultValue="comfortable" >
-              <div className='textSubTitle'>글은 만족스러운가요?</div>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <FormField
+                control={form.control}
+                name="isSatisfied"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel className='textSubTitle'>글은 만족스러운가요?</FormLabel>
+                    <FormControl>
+                    <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}>
 
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="up" id="r1" />
-                <Label className='textTitle' htmlFor="r1">👍</Label>
-              </div>
+                      <FormItem className="flex items-center space-x-2">
+                        <FormControl>
+                          <RadioGroupItem value="up" id="r1" />
+                        </FormControl>
+                        <FormLabel className='textTitle' htmlFor="r1">👍</FormLabel>
+                      </FormItem>
 
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="down" id="r2" />
-                <Label className='textTitle' htmlFor="r2">👎</Label>
-              </div>
-            </RadioGroup>
-          </div>
-          
-          <div className='space-y-3'>
-            <RadioGroup defaultValue="comfortable" >
-              <div className='textSubTitle'>글의 내용이 이해되나요?</div>
+                      <FormItem className="flex items-center space-x-2">
+                        <FormControl>
+                          <RadioGroupItem value="down" id="r2" />
+                        </FormControl>
+                        <FormLabel className='textTitle' htmlFor="r2">👎</FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="up" id="r1" />
-                <Label className='textTitle' htmlFor="r1">⭕</Label>
-              </div>
+              <FormField
+                control={form.control}
+                name="isUnderstandable"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel className='textSubTitle'>글의 내용이 이해되나요?</FormLabel>
+                    <FormControl>
+                    <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}>
 
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="down" id="r2" />
-                <Label className='textTitle' htmlFor="r2">❌</Label>
+                      <FormItem className="flex items-center space-x-2">
+                        <FormControl>
+                          <RadioGroupItem value="up" id="r1" />
+                        </FormControl>
+                        <FormLabel className='textTitle' htmlFor="r1">⭕</FormLabel>
+                      </FormItem>
+
+                      <FormItem className="flex items-center space-x-2">
+                        <FormControl>
+                          <RadioGroupItem value="down" id="r2" />
+                        </FormControl>
+                        <FormLabel className='textTitle' htmlFor="r2">❌</FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <div>
+                <Button variant={'default'} type="submit">새로운 글</Button>
               </div>
-            </RadioGroup>
-          </div>
-          
-          <div>
-            <Button variant={'default'} onClick={handleClick}>새로운 글</Button>
-          </div>
+            
+            </form>
+          </Form>
         </div>
       </div>
     </>
