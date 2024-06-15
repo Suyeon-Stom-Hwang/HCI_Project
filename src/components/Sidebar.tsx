@@ -20,15 +20,13 @@ interface SidebarProps {
 interface HistoryBlockProps {
   index: number;
   text: string;
-  isPositive: boolean;
+  isSelected: boolean;
 }
 
-function HistoryBlock({index, text, isPositive=true}: HistoryBlockProps) {
+function HistoryBlock({index, text, isSelected=true}: HistoryBlockProps) {
   let className = 'historyBlock';
-  if (isPositive) {
-    className += ' historyBlockPositive'; 
-  } else {
-    className += ' historyBlockNegative'; 
+  if (isSelected) {
+    className += ' historyBlockSelected'; 
   }
 
   return (
@@ -80,11 +78,13 @@ const Sidebar = ({isSettings}: SidebarProps) => {
         <ScrollArea className="h-[432px] w-[400px] p-[20px]">
           <div>
             {
-              histories.map((history) => (
-                <div onClick={handleHistoryClick(history.id)} key={"clickdiv-"+history.id.toString()}>
-                  <HistoryBlock text={history.title.replace("<", "").replace(">", "")} index={history.id} isPositive={true} key={history.id}/>
-                </div>
-              ))
+              histories.map((history) => {
+                const isSelected = false;
+                
+                return (<div onClick={handleHistoryClick(history.id)} key={"clickdiv-"+history.id.toString()}>
+                  <HistoryBlock text={history.title.replace("<", "").replace(">", "")} index={history.id} isSelected={isSelected} key={history.id}/>
+                </div>);
+              })
             }
           </div>
         </ScrollArea>

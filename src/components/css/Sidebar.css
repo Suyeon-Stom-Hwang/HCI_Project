@@ -36,19 +36,21 @@
 .historyBlock {
   width: 360px;
   height: 40px;
-  line-height: 40px;
+  line-height: 36px;
   padding: 0px 10px 0px 10px;
   margin-bottom: 12px;
   border-radius: 16px 16px 6px 16px;
+  border-width: 1px;
+  border-color: #72806a;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-.historyBlockPositive {
-  background-color: #E4EFD3;
+.historyBlock:hover {
+  background-color: #E0E0E0;
 }
 
-.historyBlockNegative {
-  background-color: #e0e0e0;
+.historyBlockSelected {
+  background-color: #E4EFD3;
 }
