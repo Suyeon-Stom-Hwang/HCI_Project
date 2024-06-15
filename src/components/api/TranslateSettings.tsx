@@ -39,7 +39,11 @@ async function TranslateSetting(setting: Setting | null) {
   }
   console.log(random_keywords);
 
-  const prompt = "Generate a "+ word_num + "-word " + setting.format + "which has lexile level " + setting.li.toString() + "and title flanked by < and >. The text should contain the following words in English: " + setting.keywords.join(", ") + ", " + random_keywords.join(", ") + "."
+  const keyword_list = setting.keywords.concat(random_keywords);
+  const translate_keyword = "Translate the following keywords in Korean into English. Do not answer anything else than the keywords. Seperate the keywords with a single comma(,). " + keyword_list.join(", ");
+  const translated_keywords = await prompts(translate_keyword);
+
+  const prompt = "Generate a "+ word_num + "-word " + setting.format + "which has lexile level " + setting.li.toString() + "and title flanked by < and >. The text should contain the following words in English: " + translated_keywords + "."
 
   const prompt_result = await prompts(prompt);
   return parse(prompt_result);
