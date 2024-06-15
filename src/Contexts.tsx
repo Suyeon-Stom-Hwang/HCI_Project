@@ -1,5 +1,6 @@
 import { ReactNode, createContext, useContext, useState } from "react";
 import { Parsed } from "./components/api/Parse";
+import keywordGen from "./components/api/KeywordGen";
 
 const generateId = () => {
   let counter = 1;
@@ -11,9 +12,15 @@ const generateId = () => {
 const generateSettingId = generateId();
 const generateHistoryId = generateId();
 
+export type HiddenKeyword = {
+  keyword: string;
+  score: number;
+}
+
 export type Setting = {
   name: string;
   keywords: string[];
+  additional_keywords: HiddenKeyword[];
   format: string;
   li: number;
   custom: boolean;
@@ -48,11 +55,11 @@ export type ContextData = {
   settings: Setting[];
   currentSetting: () => Setting | null;
   getSettingById: (id: number) => Setting | null;
-  addSetting: (setting: SettingInput) => Setting | null;
-  changeSetting: (setting: SettingInput, id: number) => Setting | null;
+  addSetting: (setting: SettingInput) => Promise<Setting | null> | null;
+  changeSetting: (setting: SettingInput, id: number, additional_keywords?: HiddenKeyword[]) => Promise<Setting | null> | null;
   setSetting: (id: number) => Setting | null;
-  removeKeyword: (idx: number, id?: number) => Setting | null;
-  changeFormat: (format: string, id?: number) => Setting | null;
+  removeKeyword: (idx: number, id?: number) => Promise<Setting | null> | null;
+  changeFormat: (format: string, id?: number) => Promise<Setting | null> | null;
   getPredefinedFormats: () => Format[];
   
   histories: History[];
@@ -85,6 +92,18 @@ const Context = createContext<ContextData>({
 const defaultSetting: Setting = {
   name: "test",
   keywords: ["인공지능", "컴퓨터", "언어"],
+  additional_keywords: [
+    {keyword: "머신러닝", score: 0}, 
+    {keyword: "딥러닝", score: 0},
+    {keyword: "데이터 과학", score: 0},
+    {keyword: "자연어 처리", score: 0},
+    {keyword: "알고리즘", score: 0},
+    {keyword: "신경망", score: 0},
+    {keyword: "로보틱스", score: 0},
+    {keyword: "컴퓨터 비전", score: 0},
+    {keyword: "프로그래밍", score: 0},
+    {keyword: "소프트웨어 개발", score: 0}
+  ],
   format: "news",
   li: 700,
   custom: false,
@@ -105,15 +124,24 @@ export function ContextProvider({ children }: { children: ReactNode }) {
   const getSettingById = (id: number) => {
     return settings.find((setting: Setting) => setting.id === id) || null;
   };
-  const addSetting = (setting: SettingInput) => {
-    const newSetting = {id: generateSettingId(), name: setting.name, keywords: setting.keywords, format: setting.format, li: setting.li, custom: setting.custom};
+  const addSetting = async (setting: SettingInput) => {
+    const hk = await keywordGen(setting.keywords);
+    const hkg = hk.map((key) => {return {keyword: key, score: 0}});
+    const newSetting = {id: generateSettingId(), name: setting.name, keywords: setting.keywords, additional_keywords: hkg, format: setting.format, li: setting.li, custom: setting.custom};
     setSettings([newSetting, ...settings]);
     setCurrentId(newSetting.id);
     return newSetting;
   };
-  const changeSetting = (setting: SettingInput, id: number) => {
+  const changeSetting = async (setting: SettingInput, id: number, additional_keywords?: HiddenKeyword[]) => {
     if(!getSettingById(id)) return null;
-    const newSetting = {id: id, name: setting.name, keywords: setting.keywords, format: setting.format, li: setting.li, custom: setting.custom};
+    let newSetting: Setting;
+    if(additional_keywords){
+      newSetting = {id: id, name: setting.name, keywords: setting.keywords, additional_keywords: additional_keywords, format: setting.format, li: setting.li, custom: setting.custom};
+    } else {
+      const hk = await keywordGen(setting.keywords);
+      const hkg = hk.map((key) => {return {keyword: key, score: 0}});
+      newSetting = {id: id, name: setting.name, keywords: setting.keywords, additional_keywords: hkg, format: setting.format, li: setting.li, custom: setting.custom};
+    }
     setSettings([newSetting, ...settings.filter((setting) => setting.id !== id)]);
     setCurrentId(id);
     return newSetting;
