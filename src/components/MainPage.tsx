@@ -38,6 +38,7 @@ import keywordGen from './api/KeywordGen'
 interface DictionaryPopupProps {
   word: string;
   description: string[];
+  onClick: () => void;
 }
 
 interface ParagraphBoxProps {
@@ -63,10 +64,10 @@ const formSchema = z.object({
   isUnderstandable: z.string(),
 })
 
-const DictionaryPopup = ({word, description}: DictionaryPopupProps) => {
+const DictionaryPopup = ({word, description, onClick}: DictionaryPopupProps) => {
     return (
       <div id="dictionaryPopup">
-        <div className='float-right'>
+        <div className='float-right' onClick={onClick}>
           <img src={exitIcon}/>
         </div>
         <div className="textTitle mb-[4px]">{word}</div>
@@ -146,6 +147,7 @@ function ParagraphBox({children}: ParagraphBoxProps) {
 function MainPage() {
   const { currentSetting, changeSetting, addHistory, mainPageText, setMainText, setTextId } = useContexts();
   const [ isDictionaryVisible, setIsDictionaryVisible ] = useState(false);
+  const [ selectedWord, setSelectedWord ] = useState([-1, -1]);
   const [ dictionaryItem, setDictionaryItem ] = useState<DictionaryItem>({word: "", description: []});
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -157,6 +159,7 @@ function MainPage() {
   })
   
   const handleClick = async () => {
+    setSelectedWord([-1, -1]);
     setMainText({title: "로딩중...", sentences: []});
     const newText = await TranslateSetting(currentSetting());
     setMainText(newText === "" ? {title: "생성 중 오류가 발생했습니다. 다시 시도해 주세요.", sentences: []} : newText);
@@ -166,7 +169,8 @@ function MainPage() {
     }
   }
 
-  const callDictionary = (word: string) => async () => {
+  const callDictionary = (word: string, isw: [number, number]) => async () => {
+    setSelectedWord(isw);
     setDictionaryItem({word: "로딩중...", description: []});
     setIsDictionaryVisible(true);
     const result = await dictionaryCall(word);
@@ -213,7 +217,16 @@ function MainPage() {
           <ScrollArea className="h-[740px] w-[783px]">
             <ParagraphBox>
               <span className="highlight">{mainPageText.title}</span><br/>
-              {mainPageText.sentences.map((sentence, is) => sentence.map((word, iw) => <span onClick={callDictionary(word)} key={word+is.toString()+"-"+iw.toString()}>{word + ((iw === sentence.length - 1 && is !== mainPageText.sentences.length - 1) ? ". " : " ")}</span>))}
+              {mainPageText.sentences.map((sentence, is) => sentence.map((word, iw) => {
+                let className = "hover:bg-[#E0E0E0] hover:rounded-lg"
+                if (selectedWord[0] === is && selectedWord[1] === iw) {
+                  className = "bg-[#fed7aa] rounded-lg"
+                }
+
+                return (<span className={className} onClick={callDictionary(word, [is, iw])} key={word+is.toString()+"-"+iw.toString()}>
+                  {word + ((iw === sentence.length - 1 && is !== mainPageText.sentences.length - 1) ? ". " : " ")}
+                </span>);
+              }))}
             </ParagraphBox>
           </ScrollArea>
           <div className='warnText'>
@@ -297,7 +310,13 @@ function MainPage() {
             </form>
           </Form>
         </div>
-        {isDictionaryVisible && <DictionaryPopup word={dictionaryItem.word} description={dictionaryItem.description}/>}
+        {isDictionaryVisible && <DictionaryPopup 
+            word={dictionaryItem.word} 
+            description={dictionaryItem.description} 
+            onClick={() => {
+              setSelectedWord([-1, -1]);
+              setIsDictionaryVisible(false)
+            }}/>}
       </div>
     </>
   )
