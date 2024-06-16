@@ -66,17 +66,17 @@ const formSchema = z.object({
 const DictionaryPopup = ({word, description}: DictionaryPopupProps) => {
     return (
       <div id="dictionaryPopup">
-        <div className='rightAlign'>
+        <div className='float-right'>
           <img src={exitIcon}/>
         </div>
-        <div className="textTitle marginBottom4px">{word}</div>
+        <div className="textTitle mb-[4px]">{word}</div>
         {
           description.map((comp, ix) => {
-            let className = "textRegular leftAlign";
+            let className = "textRegular float-left";
             if (ix === 0) {
-              className = "partOfSpeech marginBottom4px";
+              className = "partOfSpeech mb-[4px]";
             } else if (ix === 1) {
-              className = "textSubTitle leftAlign marginBottom4px";
+              className = "textSubTitle float-left mb-[4px]";
             }
             return (<div className={className} key={"description-"+ix.toString()}>{comp}</div>)
           })
@@ -223,32 +223,33 @@ function MainPage() {
       </div>
 
       <div className='mainSideView sectionBorder'>
-        <div id="evaluationCointainer" className='space-y-5'>
+        <div id="evaluationCointainer">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
+            <form className='space-y-4' onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
                 control={form.control}
                 name="isSatisfied"
                 render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel className='textSubTitle'>글은 만족스러운가요?</FormLabel>
+                  <FormItem>
+                    <FormLabel className='font-bold'>글은 만족스러운가요?</FormLabel>
                     <FormControl>
                     <RadioGroup
+                        className="flex space-x-5"
                         onValueChange={field.onChange}
                         defaultValue={field.value}>
 
-                      <FormItem className="flex items-center space-x-2">
+                      <FormItem className="flex items-baseline space-x-1">
                         <FormControl>
                           <RadioGroupItem value="up" id="r1" />
                         </FormControl>
-                        <FormLabel className='textTitle' htmlFor="r1">👍</FormLabel>
+                        <FormLabel className='text-[20px]' htmlFor="r1">👍</FormLabel>
                       </FormItem>
 
-                      <FormItem className="flex items-center space-x-2">
+                      <FormItem className="flex items-baseline space-x-1">
                         <FormControl>
                           <RadioGroupItem value="down" id="r2" />
                         </FormControl>
-                        <FormLabel className='textTitle' htmlFor="r2">👎</FormLabel>
+                        <FormLabel className='text-[20px]' htmlFor="r2">👎</FormLabel>
                       </FormItem>
                     </RadioGroup>
                     </FormControl>
@@ -261,25 +262,26 @@ function MainPage() {
                 control={form.control}
                 name="isUnderstandable"
                 render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel className='textSubTitle'>글의 내용이 이해되나요?</FormLabel>
+                  <FormItem>
+                    <FormLabel className='font-bold'>글의 내용이 이해되나요?</FormLabel>
                     <FormControl>
                     <RadioGroup
+                        className="flex space-x-5"
                         onValueChange={field.onChange}
                         defaultValue={field.value}>
 
-                      <FormItem className="flex items-center space-x-2">
+                      <FormItem className="flex items-baseline space-x-1">
                         <FormControl>
                           <RadioGroupItem value="up" id="r1" />
                         </FormControl>
-                        <FormLabel className='textTitle' htmlFor="r1">⭕</FormLabel>
+                        <FormLabel className='text-[20px]' htmlFor="r1">⭕</FormLabel>
                       </FormItem>
 
-                      <FormItem className="flex items-center space-x-2">
+                      <FormItem className="flex items-baseline space-x-1">
                         <FormControl>
                           <RadioGroupItem value="down" id="r2" />
                         </FormControl>
-                        <FormLabel className='textTitle' htmlFor="r2">❌</FormLabel>
+                        <FormLabel className='text-[20px]' htmlFor="r2">❌</FormLabel>
                       </FormItem>
                     </RadioGroup>
                     </FormControl>

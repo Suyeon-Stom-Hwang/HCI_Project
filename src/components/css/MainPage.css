@@ -106,7 +106,7 @@
 }
 
 #dictionaryPopup {
-  margin: 8px;
+  margin: 50px 8px 8px 8px;
   width: 240px;
   padding: 10px;
   border-radius: 10px;
@@ -132,14 +132,4 @@
   border-radius: 8px;
   border-width: 1px;
   border-color: #e0e0e0;
-}
-
-.rightAlign {
-  float: right;
-}
-.leftAlign {
-  float: left;
-}
-.marginBottom4px {
-  margin-bottom: 4px;
 }
