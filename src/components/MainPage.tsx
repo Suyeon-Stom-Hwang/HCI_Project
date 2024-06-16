@@ -38,6 +38,7 @@ import keywordGen from './api/KeywordGen'
 interface DictionaryPopupProps {
   word: string;
   description: string[];
+  onClick: () => void;
 }
 
 interface ParagraphBoxProps {
@@ -63,10 +64,10 @@ const formSchema = z.object({
   isUnderstandable: z.string(),
 })
 
-const DictionaryPopup = ({word, description}: DictionaryPopupProps) => {
+const DictionaryPopup = ({word, description, onClick}: DictionaryPopupProps) => {
     return (
       <div id="dictionaryPopup">
-        <div className='float-right'>
+        <div className='float-right' onClick={onClick}>
           <img src={exitIcon}/>
         </div>
         <div className="textTitle mb-[4px]">{word}</div>
@@ -297,7 +298,7 @@ function MainPage() {
             </form>
           </Form>
         </div>
-        {isDictionaryVisible && <DictionaryPopup word={dictionaryItem.word} description={dictionaryItem.description}/>}
+        {isDictionaryVisible && <DictionaryPopup word={dictionaryItem.word} description={dictionaryItem.description} onClick={() => setIsDictionaryVisible(false)}/>}
       </div>
     </>
   )
