@@ -28,6 +28,23 @@ import { useNavigate } from "react-router-dom"
 import './css/SettingForm.css'
 
 const liValues = [100, 300, 500, 700, 900, 1100, 1500];
+const liDescriptions = [
+  "원어민 유아/유치부", 
+  "원어민 7세", 
+  "원어민 8세", 
+  "원어민 9 ~ 10세", 
+  "원어민 11 ~ 13세", 
+  "원어민 14 ~ 16세", 
+  "원어민 17세 ~ 성인"];
+const liExamples = [
+  "A new AI software helps people. The computer uses big data and natural language processing.", 
+  "In schools today, new technologies are changing the way students learn. One important technology is artificial intelligence.",
+  "One of these areas is artificial intelligence, known as AI. AI is the ability of a computer to think and learn like a human. Another important topic is deep learning.",
+  "Recent developments in computer science have led to significant breakthroughs in the field of AI, particularly in how machines process and understand language. One of the key developments in AI is deep learning, a subset of machine learning.", 
+  "The field encompasses various aspects such as machine learning, language processing, and neural networks, which are transforming the way we live and work. With the power of algorithms, computer can now perform tasks that were once thought only possible for humans.", 
+  "In recent years, the field of artificial Intelligence has seen remarkable progress, transforming various sectors ranging from healthcare to finance. One of the most significant areas that AI is impacting is Human-Computer Interaction, fundamentally altering the way humans and machines communicate and collaborate.", 
+  "The rise of artificial intelligence (AI) in recent years has brought transformative changes to various fields, including natural language processing (NLP). This branch of AI focuses on the interaction between computers and humans using natural language, leading to the development of increasingly sophisticated algorithms."
+];
 
 const formSchema = z.object({
   settingName: z.string().min(2).max(50),
@@ -79,7 +96,7 @@ export function SettingForm(props: {id: number}) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className='text-[16px] font-bold'>이름</FormLabel>
-                <FormDescription className='textSubDescription'>
+                <FormDescription>
                   설정을 구분하기 위한 이름입니다.
                 </FormDescription>
                 <FormControl>
@@ -98,7 +115,7 @@ export function SettingForm(props: {id: number}) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className='text-[16px] font-bold'>필수 키워드</FormLabel>
-                <FormDescription className='textSubDescription'>
+                <FormDescription>
                   지문에 반드시 포함되어야 할 키워드들입니다. 관심있는 단어들을 추가해 보세요. 여러 개의 키워드를 추가할 때에는 쉼표로 구분합니다.
                 </FormDescription>
                 <FormControl>
@@ -117,7 +134,7 @@ export function SettingForm(props: {id: number}) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className='text-[16px] font-bold'>유형/형식</FormLabel>
-                <FormDescription className='textSubDescription'>
+                <FormDescription>
                   지문의 형식을 지정합니다. 읽고 싶은 글의 형식을 선택하세요.
                 </FormDescription>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -142,20 +159,25 @@ export function SettingForm(props: {id: number}) {
             control={form.control}
             name="difficultyLevel"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel className='text-[16px] font-bold'>지문 난이도</FormLabel>
-                <FormDescription className='textSubDescription'>
-                  생성되는 지문의 읽기 난이도를 설정합니다. 난이도는 Lexile measures를 통해 평가됩니다.
-                </FormDescription>
-                <Slider onValueChange={field.onChange} defaultValue={field.value} min={0} max={liValues.length - 1} step={1} />
-                <FormMessage />
-              </FormItem>
+              <>
+                <FormItem>
+                  <FormLabel className='text-[16px] font-bold'>지문 난이도</FormLabel>
+                  <FormDescription>
+                    생성되는 지문의 읽기 난이도를 설정합니다. 난이도는 Lexile measures를 통해 평가됩니다.
+                  </FormDescription>
+                  <Slider onValueChange={field.onChange} defaultValue={field.value} min={0} max={liValues.length - 1} step={1} />
+                  <FormMessage />
+                </FormItem>
+                <div className="space-y-1">
+                  <Label className='text-[16px] font-bold'>미리보기</Label>
+                  <FormDescription> 현재 난이도 - { liDescriptions[field.value[0]] } 수준 </FormDescription>
+                  <article className="text-wrap h-[145px] p-[8px] border-[1px] border-inherit rounded-md">
+                    {liExamples[field.value[0]]}
+                  </article>
+                </div>
+              </>
             )}
             />
-          <div>
-            <Label className='text-[16px] font-bold'>미리보기</Label>
-            <Textarea className='resize-none'></Textarea>
-          </div>
           <div className='formButtonContainer'>
             <Button className="formButton" type="submit">저장</Button>
             <Button className="formButton" variant="secondary" onClick={() => navigate("/")}>취소</Button>

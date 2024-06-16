@@ -210,7 +210,7 @@ function MainPage() {
           <CurrentSettingBlock/>
         </div>
         <div>
-          <ScrollArea className="max-h-[740px] w-[783px]">
+          <ScrollArea className="h-[740px] w-[783px]">
             <ParagraphBox>
               <span className="highlight">{mainPageText.title}</span><br/>
               {mainPageText.sentences.map((sentence, is) => sentence.map((word, iw) => <span onClick={callDictionary(word)} key={word+is.toString()+"-"+iw.toString()}>{word + ((iw === sentence.length - 1 && is !== mainPageText.sentences.length - 1) ? ". " : " ")}</span>))}
