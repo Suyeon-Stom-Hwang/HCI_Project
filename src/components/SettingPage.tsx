@@ -41,7 +41,6 @@ function SettingPage() {
         <SettingForm id={num_id} />
       </div>
       <div className='settingSideView sectionBorder'>
-        <InfoPopup/>
       </div>
     </>
   )
