@@ -213,7 +213,7 @@ function MainPage() {
           <ScrollArea className="h-[740px] w-[783px]">
             <ParagraphBox>
               <span className="highlight">{mainPageText.title}</span><br/>
-              {mainPageText.sentences.map((sentence, is) => sentence.map((word, iw) => <span onClick={callDictionary(word)} key={word+is.toString()+"-"+iw.toString()}>{word + ((iw === sentence.length - 1 && is !== mainPageText.sentences.length - 1) ? ". " : " ")}</span>))}
+              {mainPageText.sentences.map((sentence, is) => sentence.map((word, iw) => <span className="hover:bg-[#E0E0E0] hover:rounded-lg" onClick={callDictionary(word)} key={word+is.toString()+"-"+iw.toString()}>{word + ((iw === sentence.length - 1 && is !== mainPageText.sentences.length - 1) ? ". " : " ")}</span>))}
             </ParagraphBox>
           </ScrollArea>
           <div className='warnText'>
