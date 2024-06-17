@@ -109,7 +109,9 @@ const defaultSetting: Setting = {
 const formats: Format[] = [
   {formatEN: "news", formatKR: "뉴스"},
   {formatEN: "fiction", formatKR: "소설"},
-  {formatEN: "academicPaper", formatKR: "논문"}
+  {formatEN: "academicPaper", formatKR: "논문"},
+  // {formatEN: "non-fiction", formatKR: "논픽션"},
+  // {formatEN: "poem", formatKR: "시"}
 ];
 
 export function ContextProvider({ children }: { children: ReactNode }) {
